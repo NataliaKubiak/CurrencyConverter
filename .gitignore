@@ -1,0 +1,15 @@
+# Ignore Gradle build output directory
+/build/
+
+# Ignore Gradle-specific files
+/.gradle/
+
+# Ignore log files
+*.log
+
+# Ignore local Gradle properties
+/gradle.properties
+
+# Ignore IntelliJ IDEA files
+.idea/
+*.iml
