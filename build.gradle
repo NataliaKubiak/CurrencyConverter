@@ -1,0 +1,26 @@
+plugins {
+    id 'java'
+    id 'war'   // Плагин для создания WAR-файла
+}
+
+group = 'org.example'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    testImplementation platform('org.junit:junit-bom:5.10.0')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+}
+
+test {
+    useJUnitPlatform()
+}
+
+war {
+    archiveBaseName.set('CurrencyConverter') // Название вашего WAR файла
+    archiveVersion.set('1.0-SNAPSHOT') // Версия вашего приложения
+}
