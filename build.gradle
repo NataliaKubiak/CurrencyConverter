@@ -15,6 +15,8 @@ dependencies {
     testImplementation 'org.junit.jupiter:junit-jupiter'
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
     implementation 'org.postgresql:postgresql:42.7.3'
+    //когда пользуем mySql - используем mySql jdbc driver
+    implementation group: 'org.postgresql', name: 'postgresql', version: '42.7.3'
 }
 
 test {
