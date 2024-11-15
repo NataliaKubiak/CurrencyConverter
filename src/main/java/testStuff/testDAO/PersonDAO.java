@@ -1,8 +1,8 @@
-package testDAO;
+package testStuff.testDAO;
 
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import testDAO.models.Person;
+import testStuff.testDAO.models.Person;
 
 import java.util.List;
 

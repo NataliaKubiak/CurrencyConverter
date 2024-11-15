@@ -1,4 +1,4 @@
-package cookies;
+package testStuff.cookies;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;

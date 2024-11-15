@@ -1,4 +1,4 @@
-package servlets;
+package testStuff.servlets;
 
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;

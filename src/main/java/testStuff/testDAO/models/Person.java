@@ -1,4 +1,4 @@
-package testDAO.models;
+package testStuff.testDAO.models;
 
 public class Person {
 

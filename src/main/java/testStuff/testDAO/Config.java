@@ -1,4 +1,4 @@
-package testDAO;
+package testStuff.testDAO;
 
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
@@ -7,12 +7,15 @@ import javax.sql.DataSource;
 
 public class Config {
 
+    private static final String SQLITE_DRIVER = "org.sqlite.JDBC";
+    private static final String SQLITE_PATH = "jdbc:sqlite:db/mydatabase.db";
+
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
 
-        dataSource.setDriverClassName("org.postgresql.Driver");
-        dataSource.setUrl("jdbc:postgresql://localhost:5432/first_db");
-        dataSource.setUsername("nataliakubiak");
+        dataSource.setDriverClassName(SQLITE_DRIVER);
+        dataSource.setUrl(SQLITE_PATH);
+        dataSource.setUsername("");
         dataSource.setPassword("");
 
         return dataSource;
