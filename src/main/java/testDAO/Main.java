@@ -1,14 +1,14 @@
 package testDAO;
 
-import testDAO.models.Person;
-
 public class Main {
     public static void main(String[] args) {
-        PersonDAO personDAO = new PersonDAO();
+        Config config = new Config();
+        PersonDAO personDAO = new PersonDAO(config.jdbcTemplate());
 
 //        System.out.println(personDAO.index());
-        Person person = new Person("NEW Derek", 333, "NEWNEEWWWWWWDerek@gmail.com");
+//        Person person = new Person("JdbcPerson", 1, "JdbcPerson@gmail.com");
 //        personDAO.save(person);
-        System.out.println(personDAO.show(7));
+        personDAO.delete(4);
+//        System.out.println(personDAO.show(7));
     }
 }
