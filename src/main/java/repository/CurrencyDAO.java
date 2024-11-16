@@ -16,7 +16,6 @@ public class CurrencyDAO {
 
     public List<Currency> all() {
         return jdbcTemplate.query("SELECT * FROM Currencies", new BeanPropertyRowMapper<>(Currency.class));
-
     }
 
 }

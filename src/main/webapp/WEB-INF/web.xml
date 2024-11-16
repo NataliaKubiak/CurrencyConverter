@@ -6,39 +6,12 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>SetCookiesServlet</servlet-name>
-        <servlet-class>testStuff.cookies.SetCookiesServlet</servlet-class>
+        <servlet-name>GetAllCurrenciesServlet</servlet-name>
+        <servlet-class>servlet.GetAllCurrenciesServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>SetCookiesServlet</servlet-name>
-        <url-pattern>/set-cookies</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>GetCookiesServlet</servlet-name>
-        <servlet-class>testStuff.cookies.GetCookiesServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>GetCookiesServlet</servlet-name>
-        <url-pattern>/get-cookies</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>DeleteCookiesServlet</servlet-name>
-        <servlet-class>testStuff.cookies.DeleteCookiesServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>DeleteCookiesServlet</servlet-name>
-        <url-pattern>/delete-cookies</url-pattern>
-    </servlet-mapping>
-
-    <servlet>
-        <servlet-name>LibraryServlet</servlet-name>
-        <servlet-class>testStuff.servlet.LibraryServlet</servlet-class>
-    </servlet>
-    <servlet-mapping>
-        <servlet-name>LibraryServlet</servlet-name>
-        <url-pattern>/library</url-pattern>
+        <servlet-name>GetAllCurrenciesServlet</servlet-name>
+        <url-pattern>/currencies</url-pattern>
     </servlet-mapping>
 
 </web-app>

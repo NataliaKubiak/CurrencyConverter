@@ -14,6 +14,7 @@ dependencies {
     testImplementation platform('org.junit:junit-bom:5.10.0')
     testImplementation 'org.junit.jupiter:junit-jupiter'
     compileOnly 'jakarta.servlet:jakarta.servlet-api:6.0.0'
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
 
     implementation 'org.xerial:sqlite-jdbc:3.42.0.0'
     implementation group: 'org.springframework', name: 'spring-jdbc', version: '6.1.12'
