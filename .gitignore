@@ -13,3 +13,6 @@
 # Ignore IntelliJ IDEA files
 .idea/
 *.iml
+
+# Исключение конфигурационного файла
+src/main/resources/config.properties
