@@ -1,23 +1,15 @@
-package model;
+package model.DTO;
 
-public class Currency {
+public class CurrencyAdditionDTO {
 
-    private int id;
     private String code;
     private String name;
     private String sign;
 
-    public Currency() {
-    }
-
-    public Currency(String code, String name, String sign) {
+    public CurrencyAdditionDTO(String code, String name, String sign) {
         this.code = code;
         this.name = name;
         this.sign = sign;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getCode() {
@@ -30,10 +22,6 @@ public class Currency {
 
     public String getSign() {
         return sign;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
     public void setCode(String code) {
@@ -50,9 +38,8 @@ public class Currency {
 
     @Override
     public String toString() {
-        return "Currency{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
+        return "CurrencyAdditionDTO{" +
+                "code='" + code + '\'' +
                 ", name='" + name + '\'' +
                 ", sign='" + sign + '\'' +
                 '}';

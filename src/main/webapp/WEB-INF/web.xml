@@ -6,11 +6,11 @@
          version="3.1">
 
     <servlet>
-        <servlet-name>GetAllCurrenciesServlet</servlet-name>
-        <servlet-class>servlet.GetAllCurrenciesServlet</servlet-class>
+        <servlet-name>AllCurrenciesServlet</servlet-name>
+        <servlet-class>servlet.AllCurrenciesServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>GetAllCurrenciesServlet</servlet-name>
+        <servlet-name>AllCurrenciesServlet</servlet-name>
         <url-pattern>/currencies</url-pattern>
     </servlet-mapping>
 
