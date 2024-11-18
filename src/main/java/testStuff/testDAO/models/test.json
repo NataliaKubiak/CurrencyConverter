@@ -1,0 +1,194 @@
+[
+  {
+    "id": 1,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 3,
+      "code": "EUR",
+      "name": "Euro",
+      "sign": "€"
+    },
+    "rate": 0.95
+  },
+  {
+    "id": 2,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 1,
+      "code": "AUD",
+      "name": "Australian dollar",
+      "sign": "A$"
+    },
+    "rate": 1.55
+  },
+  {
+    "id": 3,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 4,
+      "code": "JPY",
+      "name": "Japanese Yen",
+      "sign": "¥"
+    },
+    "rate": 155.17
+  },
+  {
+    "id": 4,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 5,
+      "code": "GBP",
+      "name": "British Pound Sterling",
+      "sign": "£"
+    },
+    "rate": 0.79
+  },
+  {
+    "id": 5,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 6,
+      "code": "CAD",
+      "name": "Canadian Dollar",
+      "sign": "C$"
+    },
+    "rate": 1.41
+  },
+  {
+    "id": 6,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 7,
+      "code": "CHF",
+      "name": "Swiss Franc",
+      "sign": "CHF"
+    },
+    "rate": 0.89
+  },
+  {
+    "id": 7,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 8,
+      "code": "INR",
+      "name": "Indian Rupee",
+      "sign": "₹"
+    },
+    "rate": 84.42
+  },
+  {
+    "id": 8,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 9,
+      "code": "RUB",
+      "name": "Russian Ruble",
+      "sign": "₽"
+    },
+    "rate": 100.4
+  },
+  {
+    "id": 9,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 10,
+      "code": "PLN",
+      "name": "Polish Zloty",
+      "sign": "PLN"
+    },
+    "rate": 4.1
+  },
+  {
+    "id": 10,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 13,
+      "code": "KRW",
+      "name": "South Korean Won",
+      "sign": "₩"
+    },
+    "rate": 1397.98
+  },
+  {
+    "id": 11,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 14,
+      "code": "BRL",
+      "name": "Brazilian Real",
+      "sign": "R$"
+    },
+    "rate": 5.79
+  },
+  {
+    "id": 12,
+    "baseCurrency": {
+      "id": 2,
+      "code": "USD",
+      "name": "United States Dollar",
+      "sign": "$"
+    },
+    "targetCurrency": {
+      "id": 15,
+      "code": "CNY",
+      "name": "Chinese Yuan",
+      "sign": "¥"
+    },
+    "rate": 7.24
+  }
+]

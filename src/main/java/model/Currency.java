@@ -7,13 +7,19 @@ public class Currency {
     private String name;
     private String sign;
 
-    public Currency() {
-    }
-
-    public Currency(String code, String name, String sign) {
+    public Currency(int id, String code, String name, String sign) {
+        this.id = id;
         this.code = code;
         this.name = name;
         this.sign = sign;
+    }
+
+    public Currency() {
+        this(0, null, null, null);
+    }
+
+    public Currency(String code, String name, String sign) {
+        this(0, code, name, sign);
     }
 
     public int getId() {

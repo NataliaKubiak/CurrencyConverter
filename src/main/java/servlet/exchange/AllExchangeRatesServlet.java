@@ -1,4 +1,4 @@
-package servlet;
+package servlet.exchange;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -7,43 +7,41 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import model.Currency;
-import servise.CurrencyService;
+import model.ExchangeRate;
+import org.springframework.dao.DataAccessException;
+import servise.ExchangeService;
 
 import java.io.IOException;
-import java.util.Locale;
+import java.util.List;
 
-public class GetCurrencyServlet extends HttpServlet {
+public class AllExchangeRatesServlet extends HttpServlet {
 
-    private CurrencyService currencyService;
+    private ExchangeService exchangeService;
 
     private static final String APPLICATION_JSON = "application/json";
-    private static final String ENDPOINT_REGEX = "[A-Z]{3}";
 
     @Override
     public void init(ServletConfig config) {
-        currencyService = new CurrencyService();
+        exchangeService = new ExchangeService();
     }
 
-    //Успех - 200 +
-    //Код валюты отсутствует в адресе - 400 +
-    //Валюта не найдена - 404
+    //Успех - 200
     //Ошибка (например, база данных недоступна) - 500
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        String currencyCode = request.getPathInfo().substring(1).toUpperCase(Locale.ROOT);
+        try {
+            List<ExchangeRate> allRates = exchangeService.getAll();
+            response.setContentType(APPLICATION_JSON);
+            String allRatesJson = objectToJson(allRates);
 
-        if (!currencyCode.matches(ENDPOINT_REGEX)) {
-            response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
-            setResponseText(response, "Invalid currency code. Currency code should consist of 3 letters like: USD, EUR, etc.");
-            return;
+            setResponseText(response, allRatesJson);
+
+        } catch (DataAccessException ex) {
+            ex.printStackTrace();
+
+            response.setStatus(HttpServletResponse.SC_SERVICE_UNAVAILABLE); //503
+            setResponseText(response, "Database is unavailable. Please try again later.");
         }
-
-        Currency currency = currencyService.getCurrencyByCode(currencyCode);
-        String json = objectToJson(currency);
-
-        response.setContentType(APPLICATION_JSON);
-        setResponseText(response, json);
     }
 
     private void setResponseText(HttpServletResponse response, String responseText) {
