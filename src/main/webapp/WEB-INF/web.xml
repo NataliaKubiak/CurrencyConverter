@@ -14,4 +14,13 @@
         <url-pattern>/currencies</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>GetCurrencyServlet</servlet-name>
+        <servlet-class>servlet.GetCurrencyServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>GetCurrencyServlet</servlet-name>
+        <url-pattern>/currency/*</url-pattern>
+    </servlet-mapping>
+
 </web-app>

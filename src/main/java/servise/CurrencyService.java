@@ -21,14 +21,14 @@ public class CurrencyService {
         Currency mappedDtoToCurrency = CurrencyAdditionMapper.mapDtoToObject(currencyAdditionDTO);
 
         addCurrencyToDB(mappedDtoToCurrency);
-        return getCurrencyObjWithId(mappedDtoToCurrency.getCode());
+        return getCurrencyByCode(mappedDtoToCurrency.getCode());
     }
 
     private void addCurrencyToDB(Currency newCurrency) {
         currencyDAO.create(newCurrency);
     }
 
-    private Currency getCurrencyObjWithId(String currencyCode) {
+    public Currency getCurrencyByCode(String currencyCode) {
         return currencyDAO.getCurrencyByCode(currencyCode);
     }
 }

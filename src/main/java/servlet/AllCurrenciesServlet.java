@@ -72,6 +72,7 @@ public class AllCurrenciesServlet extends HttpServlet {
             Currency currency = currencyService.addCurrency(optionalCurrencyAdditionDTO.get());
             String json = objectToJson(currency);
 
+            //TODO set content type?
             response.setStatus(HttpServletResponse.SC_CREATED); //201
             setResponseText(response, json);
         }
