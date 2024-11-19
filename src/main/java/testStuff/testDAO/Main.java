@@ -1,5 +1,8 @@
 package testStuff.testDAO;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class Main {
     public static void main(String[] args) {
 //        Config config = new Config();
@@ -16,16 +19,14 @@ public class Main {
 //
 //        System.out.println(json);
 
-        String num = "0.0002";
-        String num2 = "0,0002";
+        Map<String, String> rrr = new HashMap<>();
 
-        try {
-            double rate = Double.parseDouble(num);
-            System.out.println("НЕ упали в NumberFormatException   " + rate);
+        rrr.put("Me", "12234");
+        rrr.put("You", "45345");
+        rrr.put("She", "888");
+        rrr.put("He", "000");
 
-        } catch (NumberFormatException exception) {
-            System.out.println("упали в NumberFormatException");
-        }
+        System.out.println(rrr.get("They"));
     }
 
 }
