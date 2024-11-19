@@ -1,4 +1,4 @@
-package servlet.currency;
+package utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 

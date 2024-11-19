@@ -2,7 +2,7 @@ package model.mapper;
 
 import jakarta.servlet.http.HttpServletRequest;
 import model.DTO.ExchangeRatePatchDTO;
-import servlet.currency.Utils;
+import utils.Utils;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
