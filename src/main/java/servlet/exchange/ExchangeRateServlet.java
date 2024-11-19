@@ -90,7 +90,7 @@ public class ExchangeRateServlet extends HttpServlet {
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
 
-        Optional<ExchangeRatePatchDTO> optionalExchangeRatePatchDTO = ExchangeRatePatchMapper.mapRequestToDto(request, baseCode, targetCode);
+        Optional<ExchangeRatePatchDTO> optionalExchangeRatePatchDTO = ExchangeRatePatchMapper.mapRequestToPatchDto(request, baseCode, targetCode);
 
         if (optionalExchangeRatePatchDTO.isEmpty()) {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400

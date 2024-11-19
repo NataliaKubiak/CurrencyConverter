@@ -1,5 +1,6 @@
 package repository;
 
+import model.DTO.ExchangeRatePatchDTO;
 import model.ExchangeRate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import repository.sqlMappers.ExchangeRateRowMapper;
@@ -77,5 +78,16 @@ public class ExchangeCurrencyDAO {
                 )""";
 
         jdbcTemplate.update(query, rate, baseCode, targetCode);
+    }
+
+    public void create(ExchangeRatePatchDTO newRate) {
+        String query = """
+                INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate)
+                VALUES (
+                (SELECT id FROM Currencies WHERE code = ?),
+                (SELECT id FROM Currencies WHERE code = ?),
+                ?)""";
+
+        jdbcTemplate.update(query, newRate.getBaseCurrencyCode(), newRate.getTargetCurrencyCode(), newRate.getRate());
     }
 }

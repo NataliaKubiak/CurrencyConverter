@@ -33,4 +33,10 @@ public class ExchangeService {
         return exchangeCurrencyDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
     }
 
+    public ExchangeRate addExchangeRate(ExchangeRatePatchDTO exchangeRatePatchDTO) {
+        exchangeCurrencyDAO.create(exchangeRatePatchDTO);
+
+        return getExchangeRate(exchangeRatePatchDTO.getBaseCurrencyCode(),
+                exchangeRatePatchDTO.getTargetCurrencyCode());
+    }
 }
