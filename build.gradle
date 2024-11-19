@@ -3,9 +3,6 @@ plugins {
     id 'war'   // Плагин для создания WAR-файла
 }
 
-group = 'org.example'
-version = '1.0-SNAPSHOT'
-
 repositories {
     mavenCentral()
 }
@@ -25,7 +22,6 @@ test {
     useJUnitPlatform()
 }
 
-war {
-    archiveBaseName.set('CurrencyConverter') // Название вашего WAR файла
-    archiveVersion.set('1.0-SNAPSHOT') // Версия вашего приложения
+tasks.named('war') {
+    archiveFileName = 'CurrencyConverter.war' // имя приложения
 }
