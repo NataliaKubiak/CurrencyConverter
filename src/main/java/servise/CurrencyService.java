@@ -6,7 +6,7 @@ import model.Currency;
 import model.DTO.CurrencyAdditionDTO;
 import model.mapper.CurrencyAdditionMapper;
 import repository.CurrencyDAO;
-import testStuff.testDAO.Config;
+import utils.Config;
 
 import java.util.List;
 

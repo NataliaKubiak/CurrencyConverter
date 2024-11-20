@@ -5,7 +5,7 @@ import exceptions.NoDataFoundException;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import repository.ExchangeDAO;
-import testStuff.testDAO.Config;
+import utils.Config;
 
 import java.util.List;
 
