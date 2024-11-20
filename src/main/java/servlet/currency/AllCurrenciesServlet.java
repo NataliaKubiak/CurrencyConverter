@@ -67,11 +67,6 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
         }
     }
 
-    private void handleDuplicateDataException(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_CONFLICT); // 409
-        setErrorMessage(response, "Currency already exist.");
-    }
-
     private void handleDataAccessException(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
         setErrorMessage(response, "Database is unavailable. Please try again later.");
@@ -90,5 +85,10 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
     private void handleBadRequest(HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
         setErrorMessage(response, "Invalid request parameters."); //Отсутствует нужное поле формы или некорректные данные
+    }
+
+    private void handleDuplicateDataException(HttpServletResponse response) {
+        response.setStatus(HttpServletResponse.SC_CONFLICT); // 409
+        setErrorMessage(response, "Currency already exist.");
     }
 }

@@ -1,5 +1,7 @@
 package servise;
 
+import exceptions.BusinessLogicException;
+import exceptions.NoDataFoundException;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import repository.ExchangeDAO;
@@ -17,23 +19,49 @@ public class ExchangeService {
     }
 
     public ExchangeRate getExchangeRate(String baseCode, String targetCode) {
-        return exchangeDAO.getRateByCurrencyCodes(baseCode, targetCode);
+        ExchangeRate rate = exchangeDAO.getRateByCurrencyCodes(baseCode, targetCode);
+
+        if (rate == null) {
+            throw new NoDataFoundException("No currencies found with Codes: " + baseCode + ", " + targetCode);
+        }
+        return rate;
     }
 
     public ExchangeRate patchExchangeRate(ExchangeRateDTO exchangeRateDTO) {
         String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
         String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
-        exchangeDAO.updateExchangeRate(
+        String codeRegex = "[A-Z]{3}";
+
+        if (!baseCurrencyCode.matches(codeRegex)
+                || !targetCurrencyCode.matches(codeRegex)) {
+            throw new BusinessLogicException("Invalid currency code.");
+        }
+
+        int rowsAffected = exchangeDAO.updateExchangeRate(
                 exchangeRateDTO.getRate(),
                 baseCurrencyCode,
                 targetCurrencyCode
         );
 
+        if (rowsAffected == 0) {
+            throw new NoDataFoundException("No currencies found with Codes: " + baseCurrencyCode + ", " + targetCurrencyCode);
+        }
+
         return exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
     }
 
     public ExchangeRate addExchangeRate(ExchangeRateDTO exchangeRateDTO) {
+        String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
+        String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
+
+        String codeRegex = "[A-Z]{3}";
+
+        if (!baseCurrencyCode.matches(codeRegex)
+                || !targetCurrencyCode.matches(codeRegex)) {
+            throw new BusinessLogicException("Invalid currency code.");
+        }
+
         exchangeDAO.create(exchangeRateDTO);
 
         return getExchangeRate(exchangeRateDTO.getBaseCurrencyCode(),

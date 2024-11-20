@@ -1,5 +1,6 @@
 package model.mapper;
 
+import exceptions.BusinessLogicException;
 import jakarta.servlet.http.HttpServletRequest;
 import model.DTO.ExchangeRateDTO;
 import utils.Utils;
@@ -56,7 +57,8 @@ public class ExchangeRateMapper {
 
             rateValue = bigDecimalRate.doubleValue();
         } catch (NumberFormatException ex) {
-            ex.printStackTrace();
+            throw new BusinessLogicException("Invalid rate data type");
+
         }
         return rateValue;
     }
