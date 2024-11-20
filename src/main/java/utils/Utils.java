@@ -25,6 +25,10 @@ public class Utils {
         return bodyParams;
     }
 
+    public static String extractCurrencyCodeFromURI(HttpServletRequest request) {
+        return request.getPathInfo().substring(1).toUpperCase(Locale.ROOT);
+    }
+
     private static String[] getStrings(HttpServletRequest request) {
         StringBuilder requestBody = new StringBuilder();
         String line;

@@ -1,12 +1,12 @@
 package model.DTO;
 
-public class ExchangeRatePatchDTO {
+public class ExchangeRateDTO {
 
     private String baseCurrencyCode;
     private String targetCurrencyCode;
     private double rate;
 
-    public ExchangeRatePatchDTO(String baseCurrencyCode, String targetCurrencyCode, double rate) {
+    public ExchangeRateDTO(String baseCurrencyCode, String targetCurrencyCode, double rate) {
         this.baseCurrencyCode = baseCurrencyCode;
         this.targetCurrencyCode = targetCurrencyCode;
         this.rate = rate;

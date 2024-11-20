@@ -1,17 +1,17 @@
 package repository;
 
-import model.DTO.ExchangeRatePatchDTO;
+import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import org.springframework.jdbc.core.JdbcTemplate;
 import repository.sqlMappers.ExchangeRateRowMapper;
 
 import java.util.List;
 
-public class ExchangeCurrencyDAO {
+public class ExchangeDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ExchangeCurrencyDAO(JdbcTemplate jdbcTemplate) {
+    public ExchangeDAO(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
     }
 
@@ -80,7 +80,7 @@ public class ExchangeCurrencyDAO {
         jdbcTemplate.update(query, rate, baseCode, targetCode);
     }
 
-    public void create(ExchangeRatePatchDTO newRate) {
+    public void create(ExchangeRateDTO newRate) {
         String query = """
                 INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate)
                 VALUES (

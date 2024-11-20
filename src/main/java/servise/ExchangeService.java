@@ -1,8 +1,8 @@
 package servise;
 
-import model.DTO.ExchangeRatePatchDTO;
+import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
-import repository.ExchangeCurrencyDAO;
+import repository.ExchangeDAO;
 import testStuff.testDAO.Config;
 
 import java.util.List;
@@ -10,33 +10,33 @@ import java.util.List;
 public class ExchangeService {
 
     Config config = new Config();
-    ExchangeCurrencyDAO exchangeCurrencyDAO = new ExchangeCurrencyDAO(config.jdbcTemplate());
+    ExchangeDAO exchangeDAO = new ExchangeDAO(config.jdbcTemplate());
 
     public List<ExchangeRate> getAll() {
-        return exchangeCurrencyDAO.getAllRates();
+        return exchangeDAO.getAllRates();
     }
 
     public ExchangeRate getExchangeRate(String baseCode, String targetCode) {
-        return exchangeCurrencyDAO.getRateByCurrencyCodes(baseCode, targetCode);
+        return exchangeDAO.getRateByCurrencyCodes(baseCode, targetCode);
     }
 
-    public ExchangeRate patchExchangeRate(ExchangeRatePatchDTO exchangeRatePatchDTO) {
-        String baseCurrencyCode = exchangeRatePatchDTO.getBaseCurrencyCode();
-        String targetCurrencyCode = exchangeRatePatchDTO.getTargetCurrencyCode();
+    public ExchangeRate patchExchangeRate(ExchangeRateDTO exchangeRateDTO) {
+        String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
+        String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
-        exchangeCurrencyDAO.updateExchangeRate(
-                exchangeRatePatchDTO.getRate(),
+        exchangeDAO.updateExchangeRate(
+                exchangeRateDTO.getRate(),
                 baseCurrencyCode,
                 targetCurrencyCode
         );
 
-        return exchangeCurrencyDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
+        return exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
     }
 
-    public ExchangeRate addExchangeRate(ExchangeRatePatchDTO exchangeRatePatchDTO) {
-        exchangeCurrencyDAO.create(exchangeRatePatchDTO);
+    public ExchangeRate addExchangeRate(ExchangeRateDTO exchangeRateDTO) {
+        exchangeDAO.create(exchangeRateDTO);
 
-        return getExchangeRate(exchangeRatePatchDTO.getBaseCurrencyCode(),
-                exchangeRatePatchDTO.getTargetCurrencyCode());
+        return getExchangeRate(exchangeRateDTO.getBaseCurrencyCode(),
+                exchangeRateDTO.getTargetCurrencyCode());
     }
 }

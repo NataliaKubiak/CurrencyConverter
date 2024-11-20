@@ -1,7 +1,7 @@
 package model.mapper;
 
 import jakarta.servlet.http.HttpServletRequest;
-import model.DTO.ExchangeRatePatchDTO;
+import model.DTO.ExchangeRateDTO;
 import utils.Utils;
 
 import java.math.BigDecimal;
@@ -9,9 +9,9 @@ import java.math.RoundingMode;
 import java.util.Map;
 import java.util.Optional;
 
-public class ExchangeRatePatchMapper {
+public class ExchangeRateMapper {
 
-    public static Optional<ExchangeRatePatchDTO> mapRequestToPatchDto(HttpServletRequest request, String baseCurrency, String targetCurrency) {
+    public static Optional<ExchangeRateDTO> mapPatchRequestToDto(HttpServletRequest request, String baseCurrency, String targetCurrency) {
 
         Map<String, String> params = Utils.extractParametersFromRequestBody(request);
         String rate = params.get("rate");
@@ -19,13 +19,13 @@ public class ExchangeRatePatchMapper {
         if (rate != null) {
             double rateValue = getRateValue(rate);
 
-            return Optional.of(new ExchangeRatePatchDTO(baseCurrency, targetCurrency, rateValue));
+            return Optional.of(new ExchangeRateDTO(baseCurrency, targetCurrency, rateValue));
         }
 
         return Optional.empty();
     }
 
-    public static Optional<ExchangeRatePatchDTO> mapRequestToPostDto(HttpServletRequest request) {
+    public static Optional<ExchangeRateDTO> mapPostRequestToDto(HttpServletRequest request) {
 
         if (request.getParameter("baseCurrencyCode") == null
                 || request.getParameter("targetCurrencyCode") == null
@@ -35,7 +35,7 @@ public class ExchangeRatePatchMapper {
 
         double rateValue = getRateValue(request.getParameter("rate"));
 
-        return Optional.of(new ExchangeRatePatchDTO(
+        return Optional.of(new ExchangeRateDTO(
                 request.getParameter("baseCurrencyCode"),
                 request.getParameter("targetCurrencyCode"),
                 rateValue
