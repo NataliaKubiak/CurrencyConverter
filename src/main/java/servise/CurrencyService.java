@@ -1,5 +1,7 @@
 package servise;
 
+import exceptions.BusinessLogicException;
+import exceptions.NoDataFoundException;
 import model.Currency;
 import model.DTO.CurrencyAdditionDTO;
 import model.mapper.CurrencyAdditionMapper;
@@ -20,6 +22,11 @@ public class CurrencyService {
     public Currency addCurrency(CurrencyAdditionDTO currencyAdditionDTO) {
         Currency mappedDtoToCurrency = CurrencyAdditionMapper.mapDtoToObject(currencyAdditionDTO);
 
+        String codeRegex = "[A-Z]{3}";
+        if (!mappedDtoToCurrency.getCode().matches(codeRegex)) {
+            throw new BusinessLogicException("Invalid currency code.");
+        }
+
         addCurrencyToDB(mappedDtoToCurrency);
         return getCurrencyByCode(mappedDtoToCurrency.getCode());
     }
@@ -29,6 +36,11 @@ public class CurrencyService {
     }
 
     public Currency getCurrencyByCode(String currencyCode) {
-        return currencyDAO.getCurrencyByCode(currencyCode);
+        Currency currency = currencyDAO.getCurrencyByCode(currencyCode);
+
+        if (currency == null) {
+            throw new NoDataFoundException("No currencies found with Code: " + currencyCode);
+        }
+        return currency;
     }
 }
