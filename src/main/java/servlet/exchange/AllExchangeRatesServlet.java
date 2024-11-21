@@ -2,6 +2,7 @@ package servlet.exchange;
 
 import exceptions.BusinessLogicException;
 import exceptions.DuplicateDataException;
+import exceptions.ExceptionHandler;
 import exceptions.NoDataFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,9 +25,9 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
             createSuccessfulGetResponse(response, allRates); //200
 
         } catch (DataAccessException ex) {
-            handleDataAccessException(response); //500
+            ExceptionHandler.handleDataAccessException(response); //500
         } catch (Exception ex) {
-            handleUnexpectedException(response); //500
+            ExceptionHandler.handleUnexpectedException(response); //500
         }
     }
 
@@ -39,14 +40,16 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
         if (!X_WWW_FORM_URLENCODED.equals(request.getContentType()) || request.getContentType() == null) {
-            handleUnsupportedMediaType(response); //415
+            ExceptionHandler.handleUnsupportedMediaType(response,
+                    "Invalid Content-Type. Expected application/x-www-form-urlencoded."); //415
             return;
         }
 
         Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPostRequestToDto(request);
 
         if (optionalExchangeRateDTO.isEmpty()) {
-            handleBadRequest(response); //400
+            ExceptionHandler.handleBadRequest(response,
+                    "Invalid request parameters. All request parameters (Base Currency Code, Target Currency Code, Rate) should be sent"); //400
 
         } else {
             try {
@@ -54,52 +57,24 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
                 createSuccessfulPostResponse(response, exchangeRate); //201
 
             } catch (BusinessLogicException ex) {
-                handleBadRequest(response); //400
+                ExceptionHandler.handleBadRequest(response,
+                        "Invalid URL parameters. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
 
             } catch (DuplicateDataException ex) {
-                handleDuplicateDataException(response); //409
+                ExceptionHandler.handleDuplicateDataException(response, "Exchange Rate already exist."); //409
 
             } catch (NoDataFoundException ex) {
-                handleNotFoundException(response,
-                        optionalExchangeRateDTO.get().getBaseCurrencyCode(),
-                        optionalExchangeRateDTO.get().getTargetCurrencyCode()); //404
+                ExceptionHandler.handleNotFoundException(response,
+                        "Can't create Exchange Rate. No currencies found with Codes: "
+                                + optionalExchangeRateDTO.get().getBaseCurrencyCode() + ", "
+                                + optionalExchangeRateDTO.get().getTargetCurrencyCode()); //404
 
             } catch (DataAccessException ex) {
-                handleDataAccessException(response); //500
+                ExceptionHandler.handleDataAccessException(response); //500
 
             } catch (Exception ex) {
-                handleUnexpectedException(response); //500
+                ExceptionHandler.handleUnexpectedException(response); //500
             }
         }
-    }
-
-    private void handleDataAccessException (HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
-        setErrorMessage(response, "Database is unavailable. Please try again later.");
-    }
-
-    private void handleUnexpectedException(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
-        setErrorMessage(response, "Unexpected server error. Please contact support.");
-    }
-
-    private void handleUnsupportedMediaType(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE); //415
-        setErrorMessage(response, "Invalid Content-Type. Expected application/x-www-form-urlencoded.");
-    }
-
-    private void handleBadRequest(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
-        setErrorMessage(response, "Invalid request parameters."); //Отсутствует нужное поле формы или некорректные данные
-    }
-
-    private void handleDuplicateDataException(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_CONFLICT); // 409
-        setErrorMessage(response, "Exchange Rate already exist.");
-    }
-
-    private void handleNotFoundException(HttpServletResponse response, String baseCode, String targetCode) {
-        response.setStatus(HttpServletResponse.SC_NOT_FOUND); //404
-        setErrorMessage(response, "No currencies found with Codes: " + baseCode + ", " + targetCode + ".");
     }
 }

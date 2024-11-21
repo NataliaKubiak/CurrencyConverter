@@ -12,17 +12,6 @@ public class BaseServlet extends HttpServlet {
     protected static final String APPLICATION_JSON = "application/json";
     protected static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
 
-    protected void setErrorMessage(HttpServletResponse response, String errorText) {
-        String errorJson = "{\"message\": \"%s\"}";
-
-        try {
-            response.getWriter().write(String.format(errorJson, errorText));
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
-        }
-    }
-
     protected void createSuccessfulGetResponse(HttpServletResponse response, Object objectForResponse) {
         String responseJson = objectToJson(objectForResponse);
 

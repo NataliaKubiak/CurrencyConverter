@@ -2,6 +2,7 @@ package servlet.currency;
 
 import exceptions.BusinessLogicException;
 import exceptions.DuplicateDataException;
+import exceptions.ExceptionHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
@@ -23,10 +24,10 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
             createSuccessfulGetResponse(response, allCurrenciesList); //200
 
         } catch (DataAccessException ex) {
-            handleDataAccessException(response); //500
+            ExceptionHandler.handleDataAccessException(response); //500
 
         } catch (Exception ex) {
-            handleUnexpectedException(response); //500
+            ExceptionHandler.handleUnexpectedException(response); //500
         }
     }
 
@@ -38,14 +39,16 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
         if (!X_WWW_FORM_URLENCODED.equals(request.getContentType()) || request.getContentType() == null) {
-            handleUnsupportedMediaType(response); //415
+            ExceptionHandler.handleUnsupportedMediaType(response,
+                    "Invalid Content-Type. Expected application/x-www-form-urlencoded."); //415
             return;
         }
 
         Optional<CurrencyAdditionDTO> optionalCurrencyAdditionDTO = CurrencyAdditionMapper.mapRequestToDto(request);
 
         if (optionalCurrencyAdditionDTO.isEmpty()) {
-            handleBadRequest(response); //400
+            ExceptionHandler.handleBadRequest(response,
+                    "Invalid request parameters. All request parameters (name, code, sign) should be sent"); //400
 
         } else {
             try {
@@ -53,42 +56,18 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
                 createSuccessfulPostResponse(response, currency); //201
 
             } catch (BusinessLogicException ex) {
-                handleBadRequest(response); //400
+                ExceptionHandler.handleBadRequest(response,
+                        "Invalid URL parameters. Currency code should consist of 3 letters"); //400
 
             } catch (DuplicateDataException ex) {
-                handleDuplicateDataException(response); //409
+                ExceptionHandler.handleDuplicateDataException(response, "Currency already exist."); //409
 
             } catch (DataAccessException ex) {
-                handleDataAccessException(response); //500
+                ExceptionHandler.handleDataAccessException(response); //500
 
             } catch (Exception ex) {
-                handleUnexpectedException(response); //500
+                ExceptionHandler.handleUnexpectedException(response); //500
             }
         }
-    }
-
-    private void handleDataAccessException(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
-        setErrorMessage(response, "Database is unavailable. Please try again later.");
-    }
-
-    private void handleUnexpectedException(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
-        setErrorMessage(response, "Unexpected server error. Please contact support.");
-    }
-
-    private void handleUnsupportedMediaType(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE); //415
-        setErrorMessage(response, "Invalid Content-Type. Expected application/x-www-form-urlencoded.");
-    }
-
-    private void handleBadRequest(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_BAD_REQUEST); //400
-        setErrorMessage(response, "Invalid request parameters."); //Отсутствует нужное поле формы или некорректные данные
-    }
-
-    private void handleDuplicateDataException(HttpServletResponse response) {
-        response.setStatus(HttpServletResponse.SC_CONFLICT); // 409
-        setErrorMessage(response, "Currency already exist.");
     }
 }
