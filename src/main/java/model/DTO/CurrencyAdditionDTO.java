@@ -35,13 +35,4 @@ public class CurrencyAdditionDTO {
     public void setSign(String sign) {
         this.sign = sign;
     }
-
-    @Override
-    public String toString() {
-        return "CurrencyAdditionDTO{" +
-                "code='" + code + '\'' +
-                ", name='" + name + '\'' +
-                ", sign='" + sign + '\'' +
-                '}';
-    }
 }
