@@ -6,7 +6,7 @@ import model.DTO.CurrencyAdditionDTO;
 
 import java.util.Optional;
 
-public class CurrencyAdditionMapper {
+public class CurrencyAdditionMapper extends BaseMapper {
 
     public static Optional<CurrencyAdditionDTO> mapRequestToDto(HttpServletRequest request) {
         if (request.getParameter("name") == null

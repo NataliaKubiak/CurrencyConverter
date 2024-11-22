@@ -1,6 +1,7 @@
 package repository;
 
 import exceptions.DuplicateDataException;
+import exceptions.NoDataFoundException;
 import model.Currency;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -44,7 +45,8 @@ public class CurrencyDAO {
         try {
             return jdbcTemplate.query("SELECT * FROM Currencies WHERE code = ?",
                             new Object[]{currencyCode}, new BeanPropertyRowMapper<>(Currency.class))
-                    .stream().findAny().orElse(null);
+                    .stream().findAny()
+                    .orElseThrow(() -> new NoDataFoundException("No currencies found with Code: " + currencyCode));
 
         } catch (DataAccessException ex) {
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);

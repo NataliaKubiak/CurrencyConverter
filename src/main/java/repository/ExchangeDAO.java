@@ -73,14 +73,15 @@ public class ExchangeDAO {
             return jdbcTemplate.query(query,
                             new Object[]{baseCurrencyCode, targetCurrencyCode},
                             new ExchangeRateRowMapper())
-                    .stream().findAny().orElse(null);
+                    .stream().findAny()
+                    .orElseThrow(() -> new NoDataFoundException("No currencies found with Codes: " + baseCurrencyCode + ", " + targetCurrencyCode));
 
         } catch (DataAccessException ex) {
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);
         }
     }
 
-    public int updateExchangeRate(double rate, String baseCode, String targetCode) {
+    public void updateExchangeRate(double rate, String baseCode, String targetCode) {
         String query = """
                 UPDATE ExchangeRates
                 SET Rate = ?
@@ -92,7 +93,11 @@ public class ExchangeDAO {
                 )""";
 
         try {
-            return jdbcTemplate.update(query, rate, baseCode, targetCode);
+            int rowsAffected = jdbcTemplate.update(query, rate, baseCode, targetCode);
+
+            if (rowsAffected == 0) {
+                throw new NoDataFoundException("No currencies found with Codes: " + baseCode + ", " + targetCode);
+            }
 
         } catch (DataAccessException ex) {
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);

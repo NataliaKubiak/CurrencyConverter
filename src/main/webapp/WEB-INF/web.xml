@@ -41,4 +41,13 @@
         <url-pattern>/exchangeRate/*</url-pattern>
     </servlet-mapping>
 
+    <servlet>
+        <servlet-name>MoneyExchangeServlet</servlet-name>
+        <servlet-class>servlet.exchange.MoneyExchangeServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>MoneyExchangeServlet</servlet-name>
+        <url-pattern>/exchangeRate/exchange</url-pattern>
+    </servlet-mapping>
+
 </web-app>
