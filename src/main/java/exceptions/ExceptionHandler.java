@@ -7,6 +7,7 @@ import java.io.IOException;
 public class ExceptionHandler {
 
     protected static final String APPLICATION_JSON = "application/json";
+    private static final String UTF_8 = "UTF-8";
     private static final String ERROR_JSON = "{\"message\": \"%s\"}";
 
     //Status: 500
@@ -46,6 +47,7 @@ public class ExceptionHandler {
     private static void setErrorResponse(HttpServletResponse response, int status, String errorMessage) {
         response.setStatus(status);
         response.setContentType(APPLICATION_JSON);
+        response.setCharacterEncoding(UTF_8);
 
         try {
             response.getWriter().write(String.format(ERROR_JSON, errorMessage));

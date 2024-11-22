@@ -9,13 +9,15 @@ import java.io.IOException;
 
 public class BaseServlet extends HttpServlet {
 
-    protected static final String APPLICATION_JSON = "application/json";
+    private static final String APPLICATION_JSON = "application/json";
+    private static final String UTF_8 = "UTF-8";
     protected static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
 
     protected void createSuccessfulGetResponse(HttpServletResponse response, Object objectForResponse) {
         String responseJson = objectToJson(objectForResponse);
 
         response.setContentType(APPLICATION_JSON);
+        response.setCharacterEncoding(UTF_8);
         response.setStatus(HttpServletResponse.SC_OK); //200
         setResponseText(response, responseJson);
     }
@@ -24,6 +26,7 @@ public class BaseServlet extends HttpServlet {
         String responseJson = objectToJson(objectForResponse);
 
         response.setContentType(APPLICATION_JSON);
+        response.setCharacterEncoding(UTF_8);
         response.setStatus(HttpServletResponse.SC_CREATED); //201
         setResponseText(response, responseJson);
     }
