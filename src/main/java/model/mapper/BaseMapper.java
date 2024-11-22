@@ -1,6 +1,5 @@
 package model.mapper;
 
-import exceptions.BusinessLogicException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.BufferedReader;
@@ -21,7 +20,10 @@ public class BaseMapper {
             // и количество знаков после запятой было как в ТЗ
             BigDecimal bigDecimalRate = new BigDecimal(Double.parseDouble(paramStringValue));
 
-            //TODO тут надо проверить является ли rate == 0 || отрицательным значением, если да - то throw new IllegalArgumentException("Exchange rates cannot be zero.");
+            if (bigDecimalRate.doubleValue() <=0 ) {
+                throw new IllegalArgumentException("Exchange rates cannot be zero or less.");
+            }
+
             if (digitToRound != null) {
                 if (bigDecimalRate.scale() > 6) {
                     bigDecimalRate = bigDecimalRate.setScale(6, RoundingMode.HALF_UP);
@@ -30,7 +32,7 @@ public class BaseMapper {
 
             paramValue = bigDecimalRate.doubleValue();
         } catch (NumberFormatException ex) {
-            throw new BusinessLogicException("Invalid parameter data type");
+            throw new IllegalArgumentException("Invalid parameter data type");
 
         }
         return paramValue;

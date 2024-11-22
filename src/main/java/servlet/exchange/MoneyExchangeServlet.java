@@ -47,9 +47,9 @@ public class MoneyExchangeServlet extends BaseExchangeRateServlet {
                     ExceptionHandler.handleUnexpectedException(response); //500
                 }
             }
-        } catch (BusinessLogicException ex) {
+        } catch (IllegalArgumentException ex) {
             ExceptionHandler.handleBadRequest(response,
-                    "Invalid parameter value. Parameter 'rate' must be a decimal number greater than zero"); //400
+                    "Invalid parameter value. Parameter 'amount' must be greater than zero"); //400
         }
     }
 }

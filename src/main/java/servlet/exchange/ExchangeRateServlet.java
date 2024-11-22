@@ -116,9 +116,9 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
                 }
             }
 
-        } catch (BusinessLogicException ex) {
+        } catch (IllegalArgumentException ex) {
             ExceptionHandler.handleBadRequest(response,
-                    "Invalid parameter value. Parameter 'rate' should be double"); //400
+                    "Invalid parameter value or type. Parameter 'rate' must be a decimal number greater than zero"); //400
         }
     }
 }

@@ -45,36 +45,41 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
             return;
         }
 
-        Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPostRequestToDto(request);
+        try {
+            Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPostRequestToDto(request);
 
-        if (optionalExchangeRateDTO.isEmpty()) {
-            ExceptionHandler.handleBadRequest(response,
-                    "Invalid request parameters. All request parameters (Base Currency Code, Target Currency Code, Rate) should be sent"); //400
-
-        } else {
-            try {
-                ExchangeRate exchangeRate = exchangeService.addExchangeRate(optionalExchangeRateDTO.get());
-                createSuccessfulPostResponse(response, exchangeRate); //201
-
-            } catch (BusinessLogicException ex) {
+            if (optionalExchangeRateDTO.isEmpty()) {
                 ExceptionHandler.handleBadRequest(response,
-                        "Invalid URL parameters. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
+                        "Invalid request parameters. All request parameters (Base Currency Code, Target Currency Code, Rate) should be sent"); //400
 
-            } catch (DuplicateDataException ex) {
-                ExceptionHandler.handleDuplicateDataException(response, "Exchange Rate already exist."); //409
+            } else {
+                try {
+                    ExchangeRate exchangeRate = exchangeService.addExchangeRate(optionalExchangeRateDTO.get());
+                    createSuccessfulPostResponse(response, exchangeRate); //201
 
-            } catch (NoDataFoundException ex) {
-                ExceptionHandler.handleNotFoundException(response,
-                        "Can't create Exchange Rate. No currencies found with Codes: "
-                                + optionalExchangeRateDTO.get().getBaseCurrencyCode() + ", "
-                                + optionalExchangeRateDTO.get().getTargetCurrencyCode()); //404
+                } catch (BusinessLogicException ex) {
+                    ExceptionHandler.handleBadRequest(response,
+                            "Invalid URL parameters. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
 
-            } catch (DataAccessException ex) {
-                ExceptionHandler.handleDataAccessException(response); //500
+                } catch (DuplicateDataException ex) {
+                    ExceptionHandler.handleDuplicateDataException(response, "Exchange Rate already exist."); //409
 
-            } catch (Exception ex) {
-                ExceptionHandler.handleUnexpectedException(response); //500
+                } catch (NoDataFoundException ex) {
+                    ExceptionHandler.handleNotFoundException(response,
+                            "Can't create Exchange Rate. No currencies found with Codes: "
+                                    + optionalExchangeRateDTO.get().getBaseCurrencyCode() + ", "
+                                    + optionalExchangeRateDTO.get().getTargetCurrencyCode()); //404
+
+                } catch (DataAccessException ex) {
+                    ExceptionHandler.handleDataAccessException(response); //500
+
+                } catch (Exception ex) {
+                    ExceptionHandler.handleUnexpectedException(response); //500
+                }
             }
+        } catch (IllegalArgumentException ex) {
+            ExceptionHandler.handleBadRequest(response,
+                    "Invalid parameter value or type. Parameter 'rate' must be a decimal number greater than zero"); //400
         }
     }
 }
