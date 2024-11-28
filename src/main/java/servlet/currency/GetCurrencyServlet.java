@@ -2,12 +2,14 @@ package servlet.currency;
 
 import exceptions.ExceptionHandler;
 import exceptions.NoDataFoundException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
 import org.springframework.dao.DataAccessException;
 import utils.Utils;
 
+@WebServlet("/currency/*")
 public class GetCurrencyServlet extends BaseCurrencyServlet {
 
     private static final String ENDPOINT_REGEX = "[A-Z]{3}";

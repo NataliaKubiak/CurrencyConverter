@@ -4,6 +4,7 @@ import exceptions.BusinessLogicException;
 import exceptions.DuplicateDataException;
 import exceptions.ExceptionHandler;
 import exceptions.NoDataFoundException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
@@ -14,6 +15,7 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 import java.util.Optional;
 
+@WebServlet("/exchangeRates")
 public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
 
     //Успех - 200 +

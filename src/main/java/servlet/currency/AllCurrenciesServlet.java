@@ -3,6 +3,7 @@ package servlet.currency;
 import exceptions.BusinessLogicException;
 import exceptions.DuplicateDataException;
 import exceptions.ExceptionHandler;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
@@ -13,6 +14,7 @@ import org.springframework.dao.DataAccessException;
 import java.util.List;
 import java.util.Optional;
 
+@WebServlet("/currencies")
 public class AllCurrenciesServlet extends BaseCurrencyServlet {
 
     //Успех - 200 +

@@ -3,6 +3,7 @@ package servlet.exchange;
 import exceptions.BusinessLogicException;
 import exceptions.ExceptionHandler;
 import exceptions.NoDataFoundException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
@@ -13,6 +14,7 @@ import utils.Utils;
 
 import java.util.Optional;
 
+@WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends BaseExchangeRateServlet {
 
     private static final String ENDPOINT_REGEX = "[A-Z]{6}";
