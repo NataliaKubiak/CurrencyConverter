@@ -20,6 +20,13 @@ public final class ConnectionUtil {
 
     public DataSource getDataSource() {
         loadProperties();
+
+        try {
+            Class.forName(SQLITE_DRIVER);
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException("SQLite JDBC driver not found", e);
+        }
+
         var hikariConfig = new HikariConfig();
 
         hikariConfig.setJdbcUrl(SQLITE_PATH);
