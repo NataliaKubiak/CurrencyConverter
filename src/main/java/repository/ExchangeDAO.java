@@ -1,8 +1,6 @@
 package repository;
 
 import exceptions.DuplicateDataException;
-import exceptions.NoDataFoundException;
-import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -10,6 +8,7 @@ import org.sqlite.SQLiteException;
 import repository.sqlMappers.ExchangeRateRowMapper;
 
 import java.util.List;
+import java.util.Optional;
 
 public class ExchangeDAO {
 
@@ -19,7 +18,7 @@ public class ExchangeDAO {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    public List<ExchangeRate> getAllRates() {
+    public List<ExchangeRate> findAll() {
         String query = """
                 SELECT
                     er.id AS exchange_rate_id,
@@ -47,7 +46,7 @@ public class ExchangeDAO {
         }
     }
 
-    public ExchangeRate getRateByCurrencyCodes(String baseCurrencyCode, String targetCurrencyCode) {
+    public Optional<ExchangeRate> getRateByCurrencyCodes(String baseCurrencyCode, String targetCurrencyCode) {
         String query = """
                 SELECT
                     er.id AS exchange_rate_id,
@@ -73,15 +72,14 @@ public class ExchangeDAO {
             return jdbcTemplate.query(query,
                             new Object[]{baseCurrencyCode, targetCurrencyCode},
                             new ExchangeRateRowMapper())
-                    .stream().findAny()
-                    .orElseThrow(() -> new NoDataFoundException("No currencies found with Codes: " + baseCurrencyCode + ", " + targetCurrencyCode));
+                    .stream().findAny();
 
         } catch (DataAccessException ex) {
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);
         }
     }
 
-    public void updateExchangeRate(double rate, String baseCode, String targetCode) {
+    public void update(double rate, String baseCode, String targetCode) {
         String query = """
                 UPDATE ExchangeRates
                 SET Rate = ?
@@ -93,21 +91,14 @@ public class ExchangeDAO {
                 )""";
 
         try {
-            int rowsAffected = jdbcTemplate.update(query, rate, baseCode, targetCode);
-
-            if (rowsAffected == 0) {
-                throw new NoDataFoundException("No currencies found with Codes: " + baseCode + ", " + targetCode);
-            }
+            jdbcTemplate.update(query, rate, baseCode, targetCode);
 
         } catch (DataAccessException ex) {
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);
         }
     }
 
-    public void create(ExchangeRateDTO newRate) {
-        String baseCode = newRate.getBaseCurrencyCode();
-        String targetCode = newRate.getTargetCurrencyCode();
-
+    public Optional<ExchangeRate> create(String baseCurrencyCode, String targetCurrencyCode, double rate) {
         String query = """
                 INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate)
                 VALUES (
@@ -116,16 +107,15 @@ public class ExchangeDAO {
                 ?)""";
 
         try {
-            jdbcTemplate.update(query, baseCode, targetCode, newRate.getRate());
+            jdbcTemplate.update(query, baseCurrencyCode, targetCurrencyCode, rate);
+
+            return getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
+
         } catch (DataAccessException ex) {
             if (ex.getCause() instanceof SQLiteException
                     && ex.getMessage().contains("UNIQUE constraint failed")) {
-                throw new DuplicateDataException("Currency pare with codes: Base Currency Code = " + baseCode
-                        + " Target Currency Code = " + targetCode + " already exists.", ex);
-            }
-
-            if (ex.getMessage().contains("NULL")) {
-                throw new NoDataFoundException("No currencies found with Codes: " + baseCode + ", " + targetCode);
+                throw new DuplicateDataException("Currency pare with codes: Base Currency Code = " + baseCurrencyCode
+                        + " Target Currency Code = " + targetCurrencyCode + " already exists.", ex);
             }
 
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);

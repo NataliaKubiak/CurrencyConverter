@@ -11,33 +11,41 @@ import repository.ExchangeDAO;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.List;
+import java.util.Optional;
 
 public class ExchangeService extends BaseService {
 
     private ExchangeDAO exchangeDAO = new ExchangeDAO(connectionUtil.jdbcTemplate());
 
     public List<ExchangeRate> getAll() {
-        return exchangeDAO.getAllRates();
+        return exchangeDAO.findAll();
     }
 
-    public ExchangeRate getExchangeRate(String baseCode, String targetCode) {
-        return exchangeDAO.getRateByCurrencyCodes(baseCode, targetCode);
+    public ExchangeRate getExchangeRate(String baseCurrencyCode, String targetCurrencyCode) {
+
+        return exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode)
+                .orElseThrow(() -> new NoDataFoundException("No exchange rate found for given currency codes."));
     }
 
-    public ExchangeRate patchExchangeRate(ExchangeRateDTO exchangeRateDTO) {
+    public ExchangeRate changeExchangeRate(ExchangeRateDTO exchangeRateDTO) {
         String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
         String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
         isCurrencyCodeMatchesPattern(baseCurrencyCode);
         isCurrencyCodeMatchesPattern(targetCurrencyCode);
 
-        exchangeDAO.updateExchangeRate(
+        ExchangeRate rate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode)
+                .orElseThrow(() -> new NoDataFoundException("No exchange rate found for given currency codes."));
+
+        exchangeDAO.update(
                 exchangeRateDTO.getRate(),
                 baseCurrencyCode,
                 targetCurrencyCode
         );
 
-        return exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
+        rate.setRate(exchangeRateDTO.getRate());
+
+        return rate;
     }
 
     public ExchangeRate addExchangeRate(ExchangeRateDTO exchangeRateDTO) {
@@ -47,9 +55,16 @@ public class ExchangeService extends BaseService {
         isCurrencyCodeMatchesPattern(baseCurrencyCode);
         isCurrencyCodeMatchesPattern(targetCurrencyCode);
 
-        exchangeDAO.create(exchangeRateDTO);
+        Optional<ExchangeRate> optionalExchangeRate = exchangeDAO.create(
+                baseCurrencyCode,
+                targetCurrencyCode,
+                exchangeRateDTO.getRate());
 
-        return getExchangeRate(baseCurrencyCode, targetCurrencyCode);
+        if (optionalExchangeRate.isEmpty()) {
+            throw new NoDataFoundException("No currencies found with Codes: " + baseCurrencyCode + ", " + targetCurrencyCode);
+        }
+
+        return optionalExchangeRate.get();
     }
 
     public MoneyExchange exchangeMoney(MoneyExchangeDTO moneyExchangeDTO) {
@@ -65,23 +80,28 @@ public class ExchangeService extends BaseService {
             throw new BusinessLogicException("Base currency and Target Currency are the same currencies");
         }
 
-        try {
-            ExchangeRate ABrate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
-            //тут пишем логику если нашлась валютная пара AB - берём её курс
-            BigDecimal bdRate = new BigDecimal(Double.toString(ABrate.getRate()));
+            Optional<ExchangeRate> optionalABrate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
 
-            BigDecimal convertedAmount = calcConvertedAmount(bdRate, amount);
+            if (optionalABrate.isPresent()) {
+                ExchangeRate ABrate = optionalABrate.get();
 
-            return new MoneyExchange(
-                    ABrate.getBaseCurrency(),
-                    ABrate.getTargetCurrency(),
-                    ABrate.getRate(),
-                    amount,
-                    convertedAmount);
+                //тут пишем логику если нашлась валютная пара AB - берём её курс
+                BigDecimal bdRate = new BigDecimal(Double.toString(ABrate.getRate()));
 
-        } catch (NoDataFoundException ex) {
-            try {
-                ExchangeRate BArate = exchangeDAO.getRateByCurrencyCodes(targetCurrencyCode, baseCurrencyCode);
+                BigDecimal convertedAmount = calcConvertedAmount(bdRate, amount);
+
+                return new MoneyExchange(
+                        ABrate.getBaseCurrency(),
+                        ABrate.getTargetCurrency(),
+                        ABrate.getRate(),
+                        amount,
+                        convertedAmount);
+            }
+
+            Optional<ExchangeRate> optionalBArate = exchangeDAO.getRateByCurrencyCodes(targetCurrencyCode, baseCurrencyCode);
+
+            if (optionalBArate.isPresent()) {
+                ExchangeRate BArate = optionalBArate.get();
                 //тут пишем логику если нашлась валютная пара BA (считаем обратный курс)
 
                 BigDecimal rate = new BigDecimal(Double.toString(BArate.getRate()));
@@ -96,10 +116,15 @@ public class ExchangeService extends BaseService {
                         ABrate.doubleValue(),
                         amount,
                         convertedAmount);
+            }
 
-            } catch (NoDataFoundException e) {
-                ExchangeRate usdToArate = exchangeDAO.getRateByCurrencyCodes("USD", baseCurrencyCode);
-                ExchangeRate usdToBrate = exchangeDAO.getRateByCurrencyCodes("USD", targetCurrencyCode);
+            Optional<ExchangeRate> optionalExchangeUsdToArate = exchangeDAO.getRateByCurrencyCodes("USD", baseCurrencyCode);
+            Optional<ExchangeRate> optionalExchangeUsdToBrate = exchangeDAO.getRateByCurrencyCodes("USD", targetCurrencyCode);
+
+            if (optionalExchangeUsdToBrate.isPresent() && optionalExchangeUsdToArate.isPresent()) {
+                ExchangeRate usdToArate = optionalExchangeUsdToArate.get();
+                ExchangeRate usdToBrate = optionalExchangeUsdToBrate.get();
+
                 //тут пишем логику перевода через доллар
 
                 BigDecimal rateUSDToB = new BigDecimal(Double.toString(usdToBrate.getRate()));
@@ -115,13 +140,10 @@ public class ExchangeService extends BaseService {
                         usdToBrate.getTargetCurrency(),
                         rateAtoB.doubleValue(),
                         amount,
-                        convertedAmount
-                );
+                        convertedAmount);
             }
 
-        }
-        // Если до сюда дошло выполнение, то ни одна ветка не сработала
-        // и завершится с NoDataFoundException из последнего блока
+            throw new NoDataFoundException("No Rates for Currencies or Currencies found with Codes: " + baseCurrencyCode + ", " + targetCurrencyCode);
     }
 
     private BigDecimal calcConvertedAmount(BigDecimal rate, double amount) {

@@ -13,7 +13,7 @@ import org.sqlite.SQLiteException;
 import java.sql.PreparedStatement;
 import java.util.List;
 
-public class CurrencyDAO implements Crudable<Currency> {
+public class CurrencyDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
@@ -33,7 +33,6 @@ public class CurrencyDAO implements Crudable<Currency> {
         this.jdbcTemplate = jdbcTemplate;
     }
 
-    @Override
     public List<Currency> findAll() {
         try {
             return jdbcTemplate.query(SELECT_ALL_SQL, new BeanPropertyRowMapper<>(Currency.class));
@@ -71,6 +70,7 @@ public class CurrencyDAO implements Crudable<Currency> {
         }
     }
 
+    //TODO тут переписать чтобы возвращало Optional
     public Currency getCurrencyByCode(String currencyCode) {
         try {
             return jdbcTemplate.query(SELECT_BY_CODE_SQL,

@@ -96,7 +96,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
 
             } else {
                 try {
-                    ExchangeRate updatedExchangeRate = exchangeService.patchExchangeRate(optionalExchangeRateDTO.get());
+                    ExchangeRate updatedExchangeRate = exchangeService.changeExchangeRate(optionalExchangeRateDTO.get());
                     createSuccessfulGetResponse(response, updatedExchangeRate);
 
                 } catch (BusinessLogicException ex) {
