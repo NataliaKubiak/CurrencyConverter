@@ -12,22 +12,17 @@ public class CurrencyService extends BaseService {
     private CurrencyDAO currencyDAO = new CurrencyDAO(connectionUtil.jdbcTemplate());
 
     public List<Currency> getAll() {
-        return currencyDAO.all();
+        return currencyDAO.findAll();
     }
 
     public Currency addCurrency(CurrencyAdditionDTO currencyAdditionDTO) {
-        Currency mappedDtoToCurrency = CurrencyAdditionMapper.mapDtoToObject(currencyAdditionDTO);
+        Currency currency = CurrencyAdditionMapper.mapDtoToObject(currencyAdditionDTO);
 
         //if no - throw BusinessLogicException
         //if yes - go further
-        isCurrencyCodeMatchesPattern(mappedDtoToCurrency.getCode());
+        isCurrencyCodeMatchesPattern(currency.getCode());
 
-        addCurrencyToDB(mappedDtoToCurrency);
-        return getCurrencyByCode(mappedDtoToCurrency.getCode());
-    }
-
-    private void addCurrencyToDB(Currency newCurrency) {
-        currencyDAO.create(newCurrency);
+        return currencyDAO.create(currency);
     }
 
     public Currency getCurrencyByCode(String currencyCode) {
