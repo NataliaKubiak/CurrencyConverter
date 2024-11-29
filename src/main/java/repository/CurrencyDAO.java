@@ -1,8 +1,7 @@
 package repository;
 
-import model.Currency;
 import exceptions.DuplicateDataException;
-import exceptions.NoDataFoundException;
+import model.Currency;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -12,6 +11,7 @@ import org.sqlite.SQLiteException;
 
 import java.sql.PreparedStatement;
 import java.util.List;
+import java.util.Optional;
 
 public class CurrencyDAO {
 
@@ -70,13 +70,11 @@ public class CurrencyDAO {
         }
     }
 
-    //TODO тут переписать чтобы возвращало Optional
-    public Currency getCurrencyByCode(String currencyCode) {
+    public Optional<Currency> getCurrencyByCode(String currencyCode) {
         try {
             return jdbcTemplate.query(SELECT_BY_CODE_SQL,
                             new Object[]{currencyCode}, new BeanPropertyRowMapper<>(Currency.class))
-                    .stream().findAny()
-                    .orElseThrow(() -> new NoDataFoundException("No currencies found with Code: " + currencyCode));
+                    .stream().findAny();
 
         } catch (DataAccessException ex) {
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);

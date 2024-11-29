@@ -1,5 +1,6 @@
 package servise;
 
+import exceptions.NoDataFoundException;
 import model.Currency;
 import model.DTO.CurrencyAdditionDTO;
 import model.mapper.CurrencyAdditionMapper;
@@ -26,6 +27,7 @@ public class CurrencyService extends BaseService {
     }
 
     public Currency getCurrencyByCode(String currencyCode) {
-        return  currencyDAO.getCurrencyByCode(currencyCode);
+        return  currencyDAO.getCurrencyByCode(currencyCode)
+                .orElseThrow(() -> new NoDataFoundException("No currencies found with Code: " + currencyCode));
     }
 }
