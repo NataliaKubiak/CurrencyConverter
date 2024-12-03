@@ -15,8 +15,6 @@ import java.util.Optional;
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends BaseExchangeRateServlet {
 
-    private static final String ENDPOINT_REGEX = "[A-Z]{6}";
-
     private static final String HTTP_PATCH = "PATCH";
     private static final String HTTP_GET = "GET";
 
@@ -38,11 +36,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = Utils.extractCurrencyCodeFromURI(request);
 
-        if (!rateCodes.matches(ENDPOINT_REGEX)) {
-            ExceptionHandler.handleBadRequest(response,
-                    "Invalid currency codes in URL. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
-            return;
-        }
+        InputValidator.validateCurrenciesPair(rateCodes);
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
@@ -60,13 +54,8 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void handlePatch(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = Utils.extractCurrencyCodeFromURI(request);
 
-        if (!rateCodes.matches(ENDPOINT_REGEX)) {
-            ExceptionHandler.handleBadRequest(response,
-                    "Invalid currency codes in URL. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
-            return;
-        }
-
         InputValidator.validateContentType(request.getContentType());
+        InputValidator.validateCurrenciesPair(rateCodes);
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
