@@ -1,16 +1,14 @@
 package servlet.exchange;
 
-import exceptions.ExceptionHandler;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
-import model.mapper.ExchangeRateMapper;
+import utils.ParamUtils;
 import validator.Validator;
 
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet("/exchangeRates")
 public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
@@ -31,17 +29,22 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
     //Ошибка (например, база данных недоступна) - 500 +
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
-
         Validator.validateContentType(request.getContentType());
 
-        Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPostRequestToDto(request);
+        String baseCodeValue = request.getParameter("baseCurrencyCode");
+        String targetCodeValue = request.getParameter("targetCurrencyCode");
+        String rateValue = request.getParameter("rate");
 
-        if (optionalExchangeRateDTO.isEmpty()) {
-            ExceptionHandler.handleBadRequest(response,
-                    "Invalid request parameters. All request parameters (Base Currency Code, Target Currency Code, Rate) should be sent"); //400
-        } else {
-            ExchangeRate exchangeRate = exchangeService.addExchangeRate(optionalExchangeRateDTO.get());
-            createSuccessfulPostResponse(response, exchangeRate); //201
-        }
+        Validator.validateStringParameterPresent("baseCurrencyCode", baseCodeValue);
+        Validator.validateStringParameterPresent("targetCurrencyCode", targetCodeValue);
+        Validator.validateStringParameterPresent("rate", rateValue);
+
+        double rate = ParamUtils.convertParamToDouble(rateValue);
+        Validator.validatePositive("Rate", rate);
+
+        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(baseCodeValue, targetCodeValue, rate);
+
+        ExchangeRate exchangeRate = exchangeService.addExchangeRate(exchangeRateDTO);
+        createSuccessfulPostResponse(response, exchangeRate); //201
     }
 }

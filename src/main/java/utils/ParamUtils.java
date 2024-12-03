@@ -1,5 +1,6 @@
-package model.mapper;
+package utils;
 
+import exceptions.InvalidInputParameterException;
 import jakarta.servlet.http.HttpServletRequest;
 
 import java.io.BufferedReader;
@@ -10,29 +11,21 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
-public class BaseMapper {
+public class ParamUtils {
 
-    protected static double getDoubleValueFromParam(String paramStringValue, Integer digitToRound) {
-        double paramValue = -1;
+    public static double convertParamToDouble(String paramStringValue) {
+        double paramValue;
 
         try {
-            // эти махинации c BigDecimal, чтобы не выводился scientific number
-            // и количество знаков после запятой было как в ТЗ
             BigDecimal bigDecimalRate = new BigDecimal(Double.parseDouble(paramStringValue));
 
-            if (bigDecimalRate.doubleValue() <=0 ) {
-                throw new IllegalArgumentException("Exchange rates cannot be zero or less.");
-            }
-
-            if (digitToRound != null) {
-                if (bigDecimalRate.scale() > 6) {
-                    bigDecimalRate = bigDecimalRate.setScale(6, RoundingMode.HALF_UP);
-                }
+            if (bigDecimalRate.scale() > 6) {
+                bigDecimalRate = bigDecimalRate.setScale(6, RoundingMode.HALF_UP);
             }
 
             paramValue = bigDecimalRate.doubleValue();
         } catch (NumberFormatException ex) {
-            throw new IllegalArgumentException("Invalid parameter data type");
+            throw new InvalidInputParameterException("Invalid data type. Should be a number.");
 
         }
         return paramValue;
@@ -56,7 +49,8 @@ public class BaseMapper {
     private static String[] getStrings(HttpServletRequest request) {
         StringBuilder requestBody = new StringBuilder();
         String line;
-        BufferedReader reader = null;
+        BufferedReader reader;
+
         try {
             reader = request.getReader();
         } catch (IOException e) {

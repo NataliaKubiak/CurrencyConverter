@@ -1,6 +1,6 @@
 package servise;
 
-import exceptions.BusinessLogicException;
+import exceptions.InvalidInputParameterException;
 import exceptions.NoDataFoundException;
 import model.DTO.ExchangeRateDTO;
 import model.DTO.MoneyExchangeDTO;
@@ -36,7 +36,7 @@ public class ExchangeService extends BaseService {
         Validator.validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         ExchangeRate rate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode)
-                .orElseThrow(() -> new NoDataFoundException("No exchange rate found for given currency codes."));
+                .orElseThrow(() -> new NoDataFoundException("No exchange rate found for given currency codes: " + baseCurrencyCode + ", " + targetCurrencyCode));
 
         exchangeDAO.update(
                 exchangeRateDTO.getRate(),
@@ -56,16 +56,8 @@ public class ExchangeService extends BaseService {
         Validator.validateCurrencyCodeMatchesPattern(baseCurrencyCode);
         Validator.validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
-        Optional<ExchangeRate> optionalExchangeRate = exchangeDAO.create(
-                baseCurrencyCode,
-                targetCurrencyCode,
-                exchangeRateDTO.getRate());
-
-        if (optionalExchangeRate.isEmpty()) {
-            throw new NoDataFoundException("No currencies found with Codes: " + baseCurrencyCode + ", " + targetCurrencyCode);
-        }
-
-        return optionalExchangeRate.get();
+        return exchangeDAO.create(baseCurrencyCode, targetCurrencyCode, exchangeRateDTO.getRate())
+                .orElseThrow(() -> new NoDataFoundException("No currency codes: " + baseCurrencyCode + ", " + targetCurrencyCode + " were found in Database"));
     }
 
     public MoneyExchange exchangeMoney(MoneyExchangeDTO moneyExchangeDTO) {
@@ -78,7 +70,7 @@ public class ExchangeService extends BaseService {
         Validator.validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         if (baseCurrencyCode.equals(targetCurrencyCode)) {
-            throw new BusinessLogicException("Base currency and Target Currency are the same currencies");
+            throw new InvalidInputParameterException("Base currency and Target Currency are the same currencies");
         }
 
             Optional<ExchangeRate> optionalABrate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
@@ -125,7 +117,6 @@ public class ExchangeService extends BaseService {
             if (optionalExchangeUsdToBrate.isPresent() && optionalExchangeUsdToArate.isPresent()) {
                 ExchangeRate usdToArate = optionalExchangeUsdToArate.get();
                 ExchangeRate usdToBrate = optionalExchangeUsdToBrate.get();
-
                 //тут пишем логику перевода через доллар
 
                 BigDecimal rateUSDToB = new BigDecimal(Double.toString(usdToBrate.getRate()));

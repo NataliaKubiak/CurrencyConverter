@@ -1,15 +1,14 @@
 package servlet.exchange;
 
-import exceptions.ExceptionHandler;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
-import model.mapper.ExchangeRateMapper;
+import utils.ParamUtils;
 import validator.Validator;
 
-import java.util.Optional;
+import java.util.Map;
 
 @WebServlet("/exchangeRate/*")
 public class ExchangeRateServlet extends BaseExchangeRateServlet {
@@ -59,15 +58,16 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
 
-        Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPatchRequestToDto(request, baseCode, targetCode);
+        Map<String, String> params = ParamUtils.extractParametersFromRequestBody(request);
+        String rateValue = params.get("rate");
+        Validator.validateStringParameterPresent("rate", rateValue);
 
-        if (optionalExchangeRateDTO.isEmpty()) {
-            ExceptionHandler.handleBadRequest(response,
-                    "Invalid request parameters. Request parameter (rate) should be sent"); //400
+        double rate = ParamUtils.convertParamToDouble(rateValue);
+        Validator.validatePositive("Rate", rate);
 
-        } else {
-            ExchangeRate updatedExchangeRate = exchangeService.changeExchangeRate(optionalExchangeRateDTO.get());
-            createSuccessfulGetResponse(response, updatedExchangeRate);
-        }
+        ExchangeRateDTO exchangeRateDTO = new ExchangeRateDTO(baseCode, targetCode, rate);
+
+        ExchangeRate updatedExchangeRate = exchangeService.changeExchangeRate(exchangeRateDTO);
+        createSuccessfulGetResponse(response, updatedExchangeRate);
     }
 }

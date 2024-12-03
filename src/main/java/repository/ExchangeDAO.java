@@ -115,7 +115,7 @@ public class ExchangeDAO {
             if (ex.getCause() instanceof SQLiteException
                     && ex.getMessage().contains("UNIQUE constraint failed")) {
                 throw new DuplicateDataException("Currency pare with codes: Base Currency Code = " + baseCurrencyCode
-                        + " Target Currency Code = " + targetCurrencyCode + " already exists.", ex);
+                        + ", Target Currency Code = " + targetCurrencyCode + ", already exists.", ex);
             }
 
             throw new RuntimeException("Database operation failed: " + ex.getMessage(), ex);

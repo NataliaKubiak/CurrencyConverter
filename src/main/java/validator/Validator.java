@@ -1,7 +1,7 @@
 package validator;
 
 import exceptions.InvalidContentTypeException;
-import exceptions.InvalidCurrencyCodeException;
+import exceptions.InvalidInputParameterException;
 import exceptions.MissingParameterException;
 
 public class Validator {
@@ -18,19 +18,25 @@ public class Validator {
 
     public static void validateCurrencyCodeMatchesPattern(String currencyCode) {
         if (!currencyCode.matches(CODE_REGEX)) {
-            throw new InvalidCurrencyCodeException("Invalid currency code. The code must consist of 3 letters, but received: " + currencyCode);
+            throw new InvalidInputParameterException("Invalid currency code. The code must consist of 3 letters, but received: " + currencyCode);
         }
     }
 
     public static void validateCurrenciesPairMatchesPattern(String currencyCodes) {
         if (!currencyCodes.matches(PAIR_REGEX)) {
-            throw new InvalidCurrencyCodeException("Invalid currency codes. The code pair must consist of 6 letters, but received: " + currencyCodes);
+            throw new InvalidInputParameterException("Invalid currency codes. The code pair must consist of 6 letters, but received: " + currencyCodes);
         }
     }
 
     public static void validateStringParameterPresent(String paramName, String paramValue) {
         if (paramValue == null || paramValue.isEmpty()) {
             throw new MissingParameterException("Required parameter '" + paramName + "' is missing in request.");
+        }
+    }
+
+    public static void validatePositive(String name, double number) {
+        if (number <= 0) {
+            throw new InvalidInputParameterException(name + " must be greater than zero.");
         }
     }
 }
