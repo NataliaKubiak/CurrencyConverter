@@ -101,13 +101,18 @@ public class ExchangeDAO {
     public Optional<ExchangeRate> create(String baseCurrencyCode, String targetCurrencyCode, double rate) {
         String query = """
                 INSERT INTO ExchangeRates (BaseCurrencyId, TargetCurrencyId, Rate)
-                VALUES (
-                (SELECT id FROM Currencies WHERE code = ?),
-                (SELECT id FROM Currencies WHERE code = ?),
-                ?)""";
+                SELECT 
+                    (SELECT id FROM Currencies WHERE code = ?),
+                    (SELECT id FROM Currencies WHERE code = ?),
+                    ?
+                WHERE 
+                    (SELECT id FROM Currencies WHERE code = ?) IS NOT NULL 
+                    AND (SELECT id FROM Currencies WHERE code = ?) IS NOT NULL
+                """;
 
         try {
-            jdbcTemplate.update(query, baseCurrencyCode, targetCurrencyCode, rate);
+            jdbcTemplate.update(query, baseCurrencyCode, targetCurrencyCode, rate,
+                    baseCurrencyCode, targetCurrencyCode);
 
             return getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode);
 
