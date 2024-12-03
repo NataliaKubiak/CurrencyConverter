@@ -31,8 +31,8 @@ public class ExchangeService extends BaseService {
         String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
         String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
-        isCurrencyCodeMatchesPattern(baseCurrencyCode);
-        isCurrencyCodeMatchesPattern(targetCurrencyCode);
+        validateCurrencyCodeMatchesPattern(baseCurrencyCode);
+        validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         ExchangeRate rate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode)
                 .orElseThrow(() -> new NoDataFoundException("No exchange rate found for given currency codes."));
@@ -52,8 +52,8 @@ public class ExchangeService extends BaseService {
         String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
         String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
-        isCurrencyCodeMatchesPattern(baseCurrencyCode);
-        isCurrencyCodeMatchesPattern(targetCurrencyCode);
+        validateCurrencyCodeMatchesPattern(baseCurrencyCode);
+        validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         Optional<ExchangeRate> optionalExchangeRate = exchangeDAO.create(
                 baseCurrencyCode,
@@ -73,8 +73,8 @@ public class ExchangeService extends BaseService {
         double amount = moneyExchangeDTO.getAmount();
 
         //проверяем валидность кодов валют
-        isCurrencyCodeMatchesPattern(baseCurrencyCode);
-        isCurrencyCodeMatchesPattern(targetCurrencyCode);
+        validateCurrencyCodeMatchesPattern(baseCurrencyCode);
+        validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         if (baseCurrencyCode.equals(targetCurrencyCode)) {
             throw new BusinessLogicException("Base currency and Target Currency are the same currencies");

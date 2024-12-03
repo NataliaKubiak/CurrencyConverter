@@ -21,7 +21,7 @@ public class ExceptionHandlingFilter implements Filter {
             ExceptionHandler.handleUnsupportedMediaType((HttpServletResponse) servletResponse,
                     ex.getMessage()); //415
 
-        } catch (BusinessLogicException | IllegalArgumentException | InvalidCurrencyCodeException ex) {
+        } catch (BusinessLogicException | IllegalArgumentException | InvalidCurrencyCodeException | MissingParameterException ex) {
             ExceptionHandler.handleBadRequest((HttpServletResponse) servletResponse,
                     ex.getMessage()); //400
 

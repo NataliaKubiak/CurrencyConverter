@@ -35,7 +35,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = extractCurrencyCodeFromURI(request);
 
-        InputValidator.validateCurrenciesPair(rateCodes);
+        InputValidator.validateCurrenciesPairMatchesPattern(rateCodes);
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
@@ -54,7 +54,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
         String rateCodes = extractCurrencyCodeFromURI(request);
 
         InputValidator.validateContentType(request.getContentType());
-        InputValidator.validateCurrenciesPair(rateCodes);
+        InputValidator.validateCurrenciesPairMatchesPattern(rateCodes);
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);

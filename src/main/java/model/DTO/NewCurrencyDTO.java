@@ -4,13 +4,13 @@ package model.DTO;
 //@Builder
 public class NewCurrencyDTO {
 
-    private String code;
     private String name;
+    private String code;
     private String sign;
 
-    public NewCurrencyDTO(String code, String name, String sign) {
-        this.code = code;
+    public NewCurrencyDTO(String name, String code, String sign) {
         this.name = name;
+        this.code = code;
         this.sign = sign;
     }
 

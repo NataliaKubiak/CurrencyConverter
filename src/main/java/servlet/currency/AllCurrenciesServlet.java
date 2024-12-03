@@ -1,16 +1,13 @@
 package servlet.currency;
 
-import exceptions.ExceptionHandler;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
 import model.DTO.NewCurrencyDTO;
-import model.mapper.CurrencyMapper;
 import validator.InputValidator;
 
 import java.util.List;
-import java.util.Optional;
 
 @WebServlet("/currencies")
 public class AllCurrenciesServlet extends BaseCurrencyServlet {
@@ -33,16 +30,18 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
 
         InputValidator.validateContentType(request.getContentType());
 
-        Optional<NewCurrencyDTO> optionalNewCurrencyDTO = CurrencyMapper.mapRequestToDto(request);
+        String nameValue = request.getParameter("name");
+        String codeValue = request.getParameter("code");
+        String signValue = request.getParameter("sign");
 
-        if (optionalNewCurrencyDTO.isEmpty()) {
-            ExceptionHandler.handleBadRequest(response,
-                    "Invalid request parameters. All request parameters (name, code, sign) should be sent"); //400
+        InputValidator.validateStringParameterPresent("name", nameValue);
+        InputValidator.validateStringParameterPresent("code", codeValue);
+        InputValidator.validateStringParameterPresent("sign", signValue);
 
-        } else {
-            Currency currency = currencyService.addCurrency(optionalNewCurrencyDTO.get());
+        NewCurrencyDTO newCurrencyDTO = new NewCurrencyDTO(nameValue, codeValue, signValue);
+
+            Currency currency = currencyService.addCurrency(newCurrencyDTO);
             createSuccessfulPostResponse(response, currency); //201
-        }
     }
 }
 

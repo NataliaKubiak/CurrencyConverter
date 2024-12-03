@@ -5,6 +5,7 @@ import model.Currency;
 import model.DTO.NewCurrencyDTO;
 import model.mapper.CurrencyMapper;
 import repository.CurrencyDAO;
+import validator.InputValidator;
 
 import java.util.List;
 
@@ -13,18 +14,13 @@ public class CurrencyService extends BaseService {
     private CurrencyDAO currencyDAO = new CurrencyDAO(connectionUtil.jdbcTemplate());
 
     public List<Currency> getAll() {
-        if (true) {
-            throw new RuntimeException();
-        }
         return currencyDAO.findAll();
     }
 
     public Currency addCurrency(NewCurrencyDTO newCurrencyDTO) {
-        Currency currency = CurrencyMapper.mapDtoToObject(newCurrencyDTO);
+        Currency currency = CurrencyMapper.mapCurrencyDtoToCurrency(newCurrencyDTO);
 
-        //if no - throw BusinessLogicException
-        //if yes - go further
-        isCurrencyCodeMatchesPattern(currency.getCode());
+        InputValidator.validateCurrencyCodeMatchesPattern(currency.getCode());
 
         return currencyDAO.create(currency);
     }

@@ -17,7 +17,7 @@ public class GetCurrencyServlet extends BaseCurrencyServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String currencyCode = extractCurrencyCodeFromURI(request);
 
-        InputValidator.validateCurrencyCode(currencyCode);
+        InputValidator.validateCurrencyCodeMatchesPattern(currencyCode);
 
         Currency currency = currencyService.getCurrencyByCode(currencyCode);
         createSuccessfulGetResponse(response, currency); //200
