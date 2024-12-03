@@ -7,6 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import model.mapper.ExchangeRateMapper;
+import validator.InputValidator;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,11 +32,7 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
-        if (!X_WWW_FORM_URLENCODED.equals(request.getContentType()) || request.getContentType() == null) {
-            ExceptionHandler.handleUnsupportedMediaType(response,
-                    "Invalid Content-Type. Expected application/x-www-form-urlencoded."); //415
-            return;
-        }
+        InputValidator.validateContentType(request.getContentType());
 
         Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPostRequestToDto(request);
 

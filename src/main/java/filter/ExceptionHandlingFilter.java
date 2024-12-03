@@ -1,9 +1,6 @@
 package filter;
 
-import exceptions.BusinessLogicException;
-import exceptions.DuplicateDataException;
-import exceptions.ExceptionHandler;
-import exceptions.NoDataFoundException;
+import exceptions.*;
 import jakarta.servlet.Filter;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletRequest;
@@ -19,6 +16,10 @@ public class ExceptionHandlingFilter implements Filter {
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) {
         try {
             filterChain.doFilter(servletRequest, servletResponse);
+
+        } catch (InvalidContentTypeException ex) {
+            ExceptionHandler.handleUnsupportedMediaType((HttpServletResponse) servletResponse,
+                    ex.getMessage()); //415
 
         } catch (BusinessLogicException | IllegalArgumentException ex) {
             ExceptionHandler.handleBadRequest((HttpServletResponse) servletResponse,

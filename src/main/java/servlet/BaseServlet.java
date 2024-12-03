@@ -9,8 +9,6 @@ import java.io.IOException;
 
 public class BaseServlet extends HttpServlet {
 
-    protected static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
-
     protected void createSuccessfulGetResponse(HttpServletResponse response, Object objectForResponse) {
         String responseJson = objectToJson(objectForResponse);
 
@@ -41,7 +39,7 @@ public class BaseServlet extends HttpServlet {
         try {
             response.getWriter().write(responseText);
         } catch (IOException ex) {
-            ex.printStackTrace();;
+            ex.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500
         }
     }

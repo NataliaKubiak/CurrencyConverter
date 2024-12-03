@@ -8,6 +8,7 @@ import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import model.mapper.ExchangeRateMapper;
 import utils.Utils;
+import validator.InputValidator;
 
 import java.util.Optional;
 
@@ -65,11 +66,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
             return;
         }
 
-        if (!X_WWW_FORM_URLENCODED.equals(request.getContentType()) || request.getContentType() == null) {
-            ExceptionHandler.handleUnsupportedMediaType(response,
-                    "Invalid Content-Type. Expected application/x-www-form-urlencoded."); //415
-            return;
-        }
+        InputValidator.validateContentType(request.getContentType());
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
