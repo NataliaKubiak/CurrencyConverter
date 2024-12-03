@@ -6,9 +6,7 @@ import java.io.IOException;
 
 public class ExceptionHandler {
 
-    protected static final String APPLICATION_JSON = "application/json";
-    private static final String UTF_8 = "UTF-8";
-    private static final String ERROR_JSON = "{\"message\": \"%s\"}";
+    private static final String ERROR_MSG_JSON = "{\"message\": \"%s\"}";
 
     //Status: 500
     public static void handleDataAccessException(HttpServletResponse response) {
@@ -46,11 +44,9 @@ public class ExceptionHandler {
 
     private static void setErrorResponse(HttpServletResponse response, int status, String errorMessage) {
         response.setStatus(status);
-        response.setContentType(APPLICATION_JSON);
-        response.setCharacterEncoding(UTF_8);
 
         try {
-            response.getWriter().write(String.format(ERROR_JSON, errorMessage));
+            response.getWriter().write(String.format(ERROR_MSG_JSON, errorMessage));
         } catch (IOException ex) {
             ex.printStackTrace();
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR); //500

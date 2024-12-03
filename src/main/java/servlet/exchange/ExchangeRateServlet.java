@@ -1,15 +1,12 @@
 package servlet.exchange;
 
-import exceptions.BusinessLogicException;
 import exceptions.ExceptionHandler;
-import exceptions.NoDataFoundException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import model.mapper.ExchangeRateMapper;
-import org.springframework.dao.DataAccessException;
 import utils.Utils;
 
 import java.util.Optional;
@@ -28,7 +25,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
             doGet(request, response);
 
         } else if (HTTP_PATCH.equals(request.getMethod())) {
-             handlePatch(request, response);
+            handlePatch(request, response);
         }
     }
 
@@ -40,7 +37,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = Utils.extractCurrencyCodeFromURI(request);
 
-        if(!rateCodes.matches(ENDPOINT_REGEX)) {
+        if (!rateCodes.matches(ENDPOINT_REGEX)) {
             ExceptionHandler.handleBadRequest(response,
                     "Invalid currency codes in URL. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
             return;
@@ -49,21 +46,9 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
 
-        try {
-            ExchangeRate exchangeRate = exchangeService.getExchangeRate(baseCode, targetCode);
-            createSuccessfulGetResponse(response, exchangeRate); //200
+        ExchangeRate exchangeRate = exchangeService.getExchangeRate(baseCode, targetCode);
+        createSuccessfulGetResponse(response, exchangeRate); //200
 
-        } catch (NoDataFoundException ex) {
-            ExceptionHandler.handleNotFoundException(response,
-                    "No Exchange Rate for this pair of currencies were found or No currencies found with Codes: "
-                            + baseCode + ", " + targetCode + "."); //404
-
-        } catch (DataAccessException ex) {
-            ExceptionHandler.handleDataAccessException(response); //500
-
-        } catch (Exception ex) {
-            ExceptionHandler.handleUnexpectedException(response); //500
-        }
     }
 
     //PATCH
@@ -74,7 +59,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void handlePatch(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = Utils.extractCurrencyCodeFromURI(request);
 
-        if(!rateCodes.matches(ENDPOINT_REGEX)) {
+        if (!rateCodes.matches(ENDPOINT_REGEX)) {
             ExceptionHandler.handleBadRequest(response,
                     "Invalid currency codes in URL. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
             return;
@@ -89,38 +74,15 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
 
-        try {
-            Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPatchRequestToDto(request, baseCode, targetCode);
+        Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPatchRequestToDto(request, baseCode, targetCode);
 
-            if (optionalExchangeRateDTO.isEmpty()) {
-                ExceptionHandler.handleBadRequest(response,
-                        "Invalid request parameters. Request parameter (rate) should be sent"); //400
-
-            } else {
-                try {
-                    ExchangeRate updatedExchangeRate = exchangeService.changeExchangeRate(optionalExchangeRateDTO.get());
-                    createSuccessfulGetResponse(response, updatedExchangeRate);
-
-                } catch (BusinessLogicException ex) {
-                    ExceptionHandler.handleBadRequest(response,
-                            "Invalid URL parameters. Currency code should consist of 3 letters like: USD, EUR, etc."); //400
-
-                } catch (NoDataFoundException ex) {
-                    ExceptionHandler.handleNotFoundException(response,
-                            "No Exchange Rate for this pair of currencies were found or No currencies found with Codes: "
-                                    + baseCode + ", " + targetCode + "."); //404
-
-                } catch (DataAccessException ex) {
-                    ExceptionHandler.handleDataAccessException(response); //500
-
-                } catch (Exception ex) {
-                    ExceptionHandler.handleUnexpectedException(response); //500
-                }
-            }
-
-        } catch (IllegalArgumentException ex) {
+        if (optionalExchangeRateDTO.isEmpty()) {
             ExceptionHandler.handleBadRequest(response,
-                    "Invalid parameter value or type. Parameter 'rate' must be a decimal number greater than zero"); //400
+                    "Invalid request parameters. Request parameter (rate) should be sent"); //400
+
+        } else {
+            ExchangeRate updatedExchangeRate = exchangeService.changeExchangeRate(optionalExchangeRateDTO.get());
+            createSuccessfulGetResponse(response, updatedExchangeRate);
         }
     }
 }

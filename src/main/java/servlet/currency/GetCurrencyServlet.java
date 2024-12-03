@@ -1,12 +1,10 @@
 package servlet.currency;
 
 import exceptions.ExceptionHandler;
-import exceptions.NoDataFoundException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
-import org.springframework.dao.DataAccessException;
 import utils.Utils;
 
 @WebServlet("/currency/*")
@@ -28,19 +26,7 @@ public class GetCurrencyServlet extends BaseCurrencyServlet {
             return;
         }
 
-        try {
-            Currency currency = currencyService.getCurrencyByCode(currencyCode);
-            createSuccessfulGetResponse(response, currency); //200
-
-        } catch (NoDataFoundException ex) {
-            ExceptionHandler.handleNotFoundException(response,
-                    "No currency found with Code: " + currencyCode); //404
-
-        } catch (DataAccessException ex) {
-            ExceptionHandler.handleDataAccessException(response); //500
-
-        } catch (Exception ex) {
-            ExceptionHandler.handleUnexpectedException(response); //500
-        }
+        Currency currency = currencyService.getCurrencyByCode(currencyCode);
+        createSuccessfulGetResponse(response, currency); //200
     }
 }
