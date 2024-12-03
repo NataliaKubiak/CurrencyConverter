@@ -3,9 +3,11 @@ package servlet;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Locale;
 
 public class BaseServlet extends HttpServlet {
 
@@ -21,6 +23,10 @@ public class BaseServlet extends HttpServlet {
 
         response.setStatus(HttpServletResponse.SC_CREATED); //201
         setResponseText(response, responseJson);
+    }
+
+    protected String extractCurrencyCodeFromURI(HttpServletRequest request) {
+        return request.getPathInfo().substring(1).toUpperCase(Locale.ROOT);
     }
 
     private String objectToJson(Object object) {

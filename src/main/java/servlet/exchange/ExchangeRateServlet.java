@@ -7,7 +7,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import model.mapper.ExchangeRateMapper;
-import utils.Utils;
 import validator.InputValidator;
 
 import java.util.Optional;
@@ -34,7 +33,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     //Ошибка (например, база данных недоступна) - 500 +
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        String rateCodes = Utils.extractCurrencyCodeFromURI(request);
+        String rateCodes = extractCurrencyCodeFromURI(request);
 
         InputValidator.validateCurrenciesPair(rateCodes);
 
@@ -52,7 +51,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     //Валютная пара отсутствует в базе данных - 404 +
     //Ошибка (например, база данных недоступна) - 500 +
     protected void handlePatch(HttpServletRequest request, HttpServletResponse response) {
-        String rateCodes = Utils.extractCurrencyCodeFromURI(request);
+        String rateCodes = extractCurrencyCodeFromURI(request);
 
         InputValidator.validateContentType(request.getContentType());
         InputValidator.validateCurrenciesPair(rateCodes);

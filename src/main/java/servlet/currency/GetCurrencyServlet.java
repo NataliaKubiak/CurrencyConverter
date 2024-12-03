@@ -4,7 +4,6 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
-import utils.Utils;
 import validator.InputValidator;
 
 @WebServlet("/currency/*")
@@ -16,7 +15,7 @@ public class GetCurrencyServlet extends BaseCurrencyServlet {
     //Ошибка (например, база данных недоступна) - 500 +
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
-        String currencyCode = Utils.extractCurrencyCodeFromURI(request);
+        String currencyCode = extractCurrencyCodeFromURI(request);
 
         InputValidator.validateCurrencyCode(currencyCode);
 
