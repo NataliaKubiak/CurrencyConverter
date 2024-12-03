@@ -7,8 +7,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
-import model.DTO.CurrencyAdditionDTO;
-import model.mapper.CurrencyAdditionMapper;
+import model.DTO.NewCurrencyDTO;
+import model.mapper.CurrencyMapper;
 import org.springframework.dao.DataAccessException;
 
 import java.util.List;
@@ -46,15 +46,15 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
             return;
         }
 
-        Optional<CurrencyAdditionDTO> optionalCurrencyAdditionDTO = CurrencyAdditionMapper.mapRequestToDto(request);
+        Optional<NewCurrencyDTO> optionalNewCurrencyDTO = CurrencyMapper.mapRequestToDto(request);
 
-        if (optionalCurrencyAdditionDTO.isEmpty()) {
+        if (optionalNewCurrencyDTO.isEmpty()) {
             ExceptionHandler.handleBadRequest(response,
                     "Invalid request parameters. All request parameters (name, code, sign) should be sent"); //400
 
         } else {
             try {
-                Currency currency = currencyService.addCurrency(optionalCurrencyAdditionDTO.get());
+                Currency currency = currencyService.addCurrency(optionalNewCurrencyDTO.get());
                 createSuccessfulPostResponse(response, currency); //201
 
             } catch (BusinessLogicException ex) {

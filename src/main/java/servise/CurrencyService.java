@@ -2,8 +2,8 @@ package servise;
 
 import exceptions.NoDataFoundException;
 import model.Currency;
-import model.DTO.CurrencyAdditionDTO;
-import model.mapper.CurrencyAdditionMapper;
+import model.DTO.NewCurrencyDTO;
+import model.mapper.CurrencyMapper;
 import repository.CurrencyDAO;
 
 import java.util.List;
@@ -16,8 +16,8 @@ public class CurrencyService extends BaseService {
         return currencyDAO.findAll();
     }
 
-    public Currency addCurrency(CurrencyAdditionDTO currencyAdditionDTO) {
-        Currency currency = CurrencyAdditionMapper.mapDtoToObject(currencyAdditionDTO);
+    public Currency addCurrency(NewCurrencyDTO newCurrencyDTO) {
+        Currency currency = CurrencyMapper.mapDtoToObject(newCurrencyDTO);
 
         //if no - throw BusinessLogicException
         //if yes - go further
