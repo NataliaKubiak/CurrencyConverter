@@ -5,7 +5,7 @@ import model.Currency;
 import model.DTO.NewCurrencyDTO;
 import model.mapper.CurrencyMapper;
 import repository.CurrencyDAO;
-import validator.InputValidator;
+import validator.Validator;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public class CurrencyService extends BaseService {
     public Currency addCurrency(NewCurrencyDTO newCurrencyDTO) {
         Currency currency = CurrencyMapper.mapCurrencyDtoToCurrency(newCurrencyDTO);
 
-        InputValidator.validateCurrencyCodeMatchesPattern(currency.getCode());
+        Validator.validateCurrencyCodeMatchesPattern(currency.getCode());
 
         return currencyDAO.create(currency);
     }

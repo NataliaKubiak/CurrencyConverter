@@ -4,7 +4,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
-import validator.InputValidator;
+import validator.Validator;
 
 @WebServlet("/currency/*")
 public class GetCurrencyServlet extends BaseCurrencyServlet {
@@ -17,7 +17,7 @@ public class GetCurrencyServlet extends BaseCurrencyServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String currencyCode = extractCurrencyCodeFromURI(request);
 
-        InputValidator.validateCurrencyCodeMatchesPattern(currencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(currencyCode);
 
         Currency currency = currencyService.getCurrencyByCode(currencyCode);
         createSuccessfulGetResponse(response, currency); //200

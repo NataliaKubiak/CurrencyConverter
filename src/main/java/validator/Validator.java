@@ -4,7 +4,7 @@ import exceptions.InvalidContentTypeException;
 import exceptions.InvalidCurrencyCodeException;
 import exceptions.MissingParameterException;
 
-public class InputValidator {
+public class Validator {
 
     private static final String X_WWW_FORM_URLENCODED = "application/x-www-form-urlencoded";
     private static final String CODE_REGEX = "[A-Z]{3}";

@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import model.mapper.ExchangeRateMapper;
-import validator.InputValidator;
+import validator.Validator;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,7 +32,7 @@ public class AllExchangeRatesServlet extends BaseExchangeRateServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
-        InputValidator.validateContentType(request.getContentType());
+        Validator.validateContentType(request.getContentType());
 
         Optional<ExchangeRateDTO> optionalExchangeRateDTO = ExchangeRateMapper.mapPostRequestToDto(request);
 

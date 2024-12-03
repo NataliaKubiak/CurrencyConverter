@@ -7,7 +7,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import model.DTO.ExchangeRateDTO;
 import model.ExchangeRate;
 import model.mapper.ExchangeRateMapper;
-import validator.InputValidator;
+import validator.Validator;
 
 import java.util.Optional;
 
@@ -35,7 +35,7 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = extractCurrencyCodeFromURI(request);
 
-        InputValidator.validateCurrenciesPairMatchesPattern(rateCodes);
+        Validator.validateCurrenciesPairMatchesPattern(rateCodes);
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);
@@ -53,8 +53,8 @@ public class ExchangeRateServlet extends BaseExchangeRateServlet {
     protected void handlePatch(HttpServletRequest request, HttpServletResponse response) {
         String rateCodes = extractCurrencyCodeFromURI(request);
 
-        InputValidator.validateContentType(request.getContentType());
-        InputValidator.validateCurrenciesPairMatchesPattern(rateCodes);
+        Validator.validateContentType(request.getContentType());
+        Validator.validateCurrenciesPairMatchesPattern(rateCodes);
 
         String baseCode = rateCodes.substring(0, 3);
         String targetCode = rateCodes.substring(3);

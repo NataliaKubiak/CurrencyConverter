@@ -5,7 +5,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import model.Currency;
 import model.DTO.NewCurrencyDTO;
-import validator.InputValidator;
+import validator.Validator;
 
 import java.util.List;
 
@@ -28,15 +28,15 @@ public class AllCurrenciesServlet extends BaseCurrencyServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) {
 
-        InputValidator.validateContentType(request.getContentType());
+        Validator.validateContentType(request.getContentType());
 
         String nameValue = request.getParameter("name");
         String codeValue = request.getParameter("code");
         String signValue = request.getParameter("sign");
 
-        InputValidator.validateStringParameterPresent("name", nameValue);
-        InputValidator.validateStringParameterPresent("code", codeValue);
-        InputValidator.validateStringParameterPresent("sign", signValue);
+        Validator.validateStringParameterPresent("name", nameValue);
+        Validator.validateStringParameterPresent("code", codeValue);
+        Validator.validateStringParameterPresent("sign", signValue);
 
         NewCurrencyDTO newCurrencyDTO = new NewCurrencyDTO(nameValue, codeValue, signValue);
 
