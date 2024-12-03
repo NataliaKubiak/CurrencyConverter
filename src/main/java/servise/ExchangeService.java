@@ -7,6 +7,7 @@ import model.DTO.MoneyExchangeDTO;
 import model.ExchangeRate;
 import model.MoneyExchange;
 import repository.ExchangeDAO;
+import validator.Validator;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -31,8 +32,8 @@ public class ExchangeService extends BaseService {
         String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
         String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
-        validateCurrencyCodeMatchesPattern(baseCurrencyCode);
-        validateCurrencyCodeMatchesPattern(targetCurrencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(baseCurrencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         ExchangeRate rate = exchangeDAO.getRateByCurrencyCodes(baseCurrencyCode, targetCurrencyCode)
                 .orElseThrow(() -> new NoDataFoundException("No exchange rate found for given currency codes."));
@@ -52,8 +53,8 @@ public class ExchangeService extends BaseService {
         String baseCurrencyCode = exchangeRateDTO.getBaseCurrencyCode();
         String targetCurrencyCode = exchangeRateDTO.getTargetCurrencyCode();
 
-        validateCurrencyCodeMatchesPattern(baseCurrencyCode);
-        validateCurrencyCodeMatchesPattern(targetCurrencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(baseCurrencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         Optional<ExchangeRate> optionalExchangeRate = exchangeDAO.create(
                 baseCurrencyCode,
@@ -73,8 +74,8 @@ public class ExchangeService extends BaseService {
         double amount = moneyExchangeDTO.getAmount();
 
         //проверяем валидность кодов валют
-        validateCurrencyCodeMatchesPattern(baseCurrencyCode);
-        validateCurrencyCodeMatchesPattern(targetCurrencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(baseCurrencyCode);
+        Validator.validateCurrencyCodeMatchesPattern(targetCurrencyCode);
 
         if (baseCurrencyCode.equals(targetCurrencyCode)) {
             throw new BusinessLogicException("Base currency and Target Currency are the same currencies");
