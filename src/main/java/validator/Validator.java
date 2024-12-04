@@ -2,7 +2,6 @@ package validator;
 
 import exceptions.InvalidContentTypeException;
 import exceptions.InvalidInputParameterException;
-import exceptions.MissingParameterException;
 
 public class Validator {
 
@@ -30,7 +29,7 @@ public class Validator {
 
     public static void validateStringParameterPresent(String paramName, String paramValue) {
         if (paramValue == null || paramValue.isEmpty()) {
-            throw new MissingParameterException("Required parameter '" + paramName + "' is missing in request.");
+            throw new InvalidInputParameterException("Required parameter '" + paramName + "' is missing in request.");
         }
     }
 

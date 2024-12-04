@@ -21,7 +21,7 @@ public class ExceptionHandlingFilter implements Filter {
             ExceptionHandler.handleUnsupportedMediaType((HttpServletResponse) servletResponse,
                     ex.getMessage()); //415
 
-        } catch (InvalidInputParameterException | MissingParameterException ex) {
+        } catch (InvalidInputParameterException ex) {
             ExceptionHandler.handleBadRequest((HttpServletResponse) servletResponse,
                     ex.getMessage()); //400
 
