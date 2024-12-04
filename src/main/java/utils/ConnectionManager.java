@@ -9,7 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public final class ConnectionUtil {
+public final class ConnectionManager {
 
     private static final String SQLITE_DRIVER = "org.sqlite.JDBC";
     private static String SQLITE_PATH;
@@ -45,7 +45,7 @@ public final class ConnectionUtil {
     private void loadProperties() {
         Properties properties = new Properties();
 
-        try (InputStream input = ConnectionUtil.class.getClassLoader().getResourceAsStream("application.properties")) {
+        try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")) {
             if (input == null) {
                 throw new RuntimeException("application.properties not found in resources");
             }

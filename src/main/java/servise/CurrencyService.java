@@ -11,7 +11,7 @@ import java.util.List;
 
 public class CurrencyService extends BaseService {
 
-    private CurrencyDAO currencyDAO = new CurrencyDAO(connectionUtil.jdbcTemplate());
+    private CurrencyDAO currencyDAO = new CurrencyDAO(connectionManager.jdbcTemplate());
 
     public List<Currency> getAll() {
         return currencyDAO.findAll();

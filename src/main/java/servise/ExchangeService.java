@@ -16,7 +16,7 @@ import java.util.Optional;
 
 public class ExchangeService extends BaseService {
 
-    private ExchangeDAO exchangeDAO = new ExchangeDAO(connectionUtil.jdbcTemplate());
+    private ExchangeDAO exchangeDAO = new ExchangeDAO(connectionManager.jdbcTemplate());
 
     public List<ExchangeRate> getAll() {
         return exchangeDAO.findAll();

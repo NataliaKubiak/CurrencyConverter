@@ -1,8 +1,8 @@
 package servise;
 
-import utils.ConnectionUtil;
+import utils.ConnectionManager;
 
 public class BaseService {
 
-    protected ConnectionUtil connectionUtil = new ConnectionUtil();
+    protected ConnectionManager connectionManager = new ConnectionManager();
 }
