@@ -10,7 +10,7 @@ public class Validator {
     private static final String PAIR_REGEX = "[A-Z]{6}";
 
     public static void validateContentType(String contentType) {
-        if (!X_WWW_FORM_URLENCODED.equals(contentType) || contentType == null) {
+        if (contentType == null || !contentType.contains(X_WWW_FORM_URLENCODED)) {
             throw new InvalidContentTypeException("Invalid Content-Type. Expected application/x-www-form-urlencoded.");
         }
     }
