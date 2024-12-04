@@ -8,7 +8,7 @@ import model.MoneyExchange;
 import utils.ParamUtils;
 import validator.Validator;
 
-@WebServlet("/exchangeRate/exchange")
+@WebServlet("/exchange")
 public class MoneyExchangeServlet extends BaseExchangeRateServlet {
 
     @Override
