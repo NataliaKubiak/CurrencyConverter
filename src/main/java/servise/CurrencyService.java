@@ -9,9 +9,9 @@ import validator.Validator;
 
 import java.util.List;
 
-public class CurrencyService extends BaseService {
+public class CurrencyService {
 
-    private CurrencyDAO currencyDAO = new CurrencyDAO(connectionManager.jdbcTemplate());
+    private CurrencyDAO currencyDAO = new CurrencyDAO();
 
     public List<Currency> getAll() {
         return currencyDAO.findAll();

@@ -6,6 +6,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.sqlite.SQLiteException;
 import repository.sqlMappers.ExchangeRateRowMapper;
+import utils.ConnectionManager;
 
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +15,8 @@ public class ExchangeDAO {
 
     private final JdbcTemplate jdbcTemplate;
 
-    public ExchangeDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public ExchangeDAO() {
+        this.jdbcTemplate = new JdbcTemplate(ConnectionManager.getDataSource());
     }
 
     public List<ExchangeRate> findAll() {

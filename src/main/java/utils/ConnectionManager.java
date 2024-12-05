@@ -2,9 +2,7 @@ package utils;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import org.springframework.jdbc.core.JdbcTemplate;
 
-import javax.sql.DataSource;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -17,32 +15,45 @@ public final class ConnectionManager {
     private static String PASSWORD;
 
     private static final int MAX_POOL_SIZE = 10;
+    private static HikariDataSource dataSource;
 
-    public DataSource getDataSource() {
-        loadProperties();
+    private ConnectionManager() {
+    }
 
-        try {
-            Class.forName(SQLITE_DRIVER);
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException("SQLite JDBC driver not found", e);
+    public static HikariDataSource getDataSource() {
+        if (dataSource == null) {
+            synchronized (ConnectionManager.class) {
+                if (dataSource == null) {
+                    loadProperties();
+
+                    try {
+                        Class.forName(SQLITE_DRIVER);
+                    } catch (ClassNotFoundException e) {
+                        throw new RuntimeException("SQLite JDBC driver not found", e);
+                    }
+
+                    var hikariConfig = new HikariConfig();
+
+                    hikariConfig.setJdbcUrl(SQLITE_PATH);
+                    hikariConfig.setUsername(USERNAME);
+                    hikariConfig.setPassword(PASSWORD);
+                    hikariConfig.setMaximumPoolSize(MAX_POOL_SIZE);
+
+                    dataSource = new HikariDataSource(hikariConfig);
+                }
+            }
         }
 
-        var hikariConfig = new HikariConfig();
-
-        hikariConfig.setJdbcUrl(SQLITE_PATH);
-        hikariConfig.setUsername(USERNAME);
-        hikariConfig.setPassword(PASSWORD);
-
-        hikariConfig.setMaximumPoolSize(MAX_POOL_SIZE);
-
-        return new HikariDataSource(hikariConfig);
+        return dataSource;
     }
 
-    public JdbcTemplate jdbcTemplate() {
-        return new JdbcTemplate(getDataSource());
+    public static void close() {
+        if (dataSource != null) {
+            dataSource.close();
+        }
     }
 
-    private void loadProperties() {
+    private static void loadProperties() {
         Properties properties = new Properties();
 
         try (InputStream input = ConnectionManager.class.getClassLoader().getResourceAsStream("application.properties")) {

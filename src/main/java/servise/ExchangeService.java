@@ -14,9 +14,9 @@ import java.math.RoundingMode;
 import java.util.List;
 import java.util.Optional;
 
-public class ExchangeService extends BaseService {
+public class ExchangeService {
 
-    private ExchangeDAO exchangeDAO = new ExchangeDAO(connectionManager.jdbcTemplate());
+    private ExchangeDAO exchangeDAO = new ExchangeDAO();
 
     public List<ExchangeRate> getAll() {
         return exchangeDAO.findAll();

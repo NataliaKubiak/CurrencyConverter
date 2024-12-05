@@ -8,6 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.sqlite.SQLiteException;
+import utils.ConnectionManager;
 
 import java.sql.PreparedStatement;
 import java.util.List;
@@ -29,8 +30,8 @@ public class CurrencyDAO {
             WHERE code = ?
             """;
 
-    public CurrencyDAO(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+    public CurrencyDAO() {
+        this.jdbcTemplate = new JdbcTemplate(ConnectionManager.getDataSource());
     }
 
     public List<Currency> findAll() {

@@ -1,0 +1,30 @@
+### Get Currency by Code - 200 OK
+GET http://localhost:8080/currency/EUR
+Accept: application/json
+
+
+### Get Currency by Code - 400 Bad Request
+### Wrong code length in URL
+GET http://localhost:8080/currency/EU
+Accept: application/json
+
+
+### Add new Currency - 201 Created
+POST http://localhost:8080/currencies
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+name=Georgian Lari &
+code=GEL &
+sign=₾
+
+
+### Add new Currency - 400 Bad Request
+### Missing Param
+POST http://localhost:8080/currencies
+Accept: application/json
+Content-Type: application/x-www-form-urlencoded
+
+name=Georgian Lari &
+code= &
+sign=₾
