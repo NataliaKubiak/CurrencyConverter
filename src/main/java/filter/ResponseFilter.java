@@ -5,7 +5,9 @@ import jakarta.servlet.annotation.WebFilter;
 
 import java.io.IOException;
 
-@WebFilter("/*")
+@WebFilter(value = {
+        "/currencies", "/currency/*", "/exchangeRates", "/exchangeRate/*", "/exchange"
+})
 public class ResponseFilter implements Filter {
 
     private static final String APPLICATION_JSON = "application/json";
